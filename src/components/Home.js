@@ -79,7 +79,7 @@ const FrameText = styled.div`
   @media (max-width: 768px) {
     width: 100%;
     margin-right: 0;
-    margin-top: 2em;
+    margin-top: -2em;
     
 
   }
