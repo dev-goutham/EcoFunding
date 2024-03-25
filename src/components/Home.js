@@ -61,7 +61,7 @@ const Container = styled.div`
   justify-content: center;
   background-color: white;
   @media (max-width: 768px) {
-    flex-direction: column;
+    flex-direction: column-reverse;
     justify-content: center;
     
     margin: 0 20px;
