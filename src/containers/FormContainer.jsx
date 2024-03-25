@@ -33,8 +33,8 @@ const H1 = styled.h1`
 export default function FormContainer() {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
-    firstname: '',
-    lastname: '',
+    firstName: '',
+    lastName: '',
     mobileNumber: '',
     role: '',
     cnpjCpf: '',
