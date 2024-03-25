@@ -156,6 +156,7 @@ const ParallaxFolha = styled.img`
   z-index: 1000;
   top: 500px;
   margin-left: -100px;
+  user-select: none;
   
   transition: transform 0.35s ease-out;
   
@@ -176,6 +177,7 @@ const ParallaxFolhaCima = styled.img`
   left: 400px;
   bottom: 200px;
   transition: transform 0.35s ease-out;
+  user-select: none;
 `;
 
 
