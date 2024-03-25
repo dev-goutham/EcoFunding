@@ -79,6 +79,7 @@ const FrameText = styled.div`
   @media (max-width: 768px) {
     width: 100%;
     margin-right: 0;
+    margin-left: 5em;
     margin-top: -2em;
     
 
@@ -378,7 +379,7 @@ const HomeCarousel = () => {
   
     switch (true) {
       case windowWidth < 668:
-        setSlideHeight(150); // Example: Increase height for smaller screens
+        setSlideHeight(140); // Example: Increase height for smaller screens
         break;
       case windowWidth >= 668 && windowWidth < 1604:
         setSlideHeight(27); // Hypothetical case: Medium screens
