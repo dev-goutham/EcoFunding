@@ -1,6 +1,7 @@
 {
   "name": "eco-funding",
   "version": "0.1.0",
+  "type": "module",
   "private": false,
   "homepage": "https://eco-funding-git-master-luigihard.vercel.app/",
   "dependencies": {
