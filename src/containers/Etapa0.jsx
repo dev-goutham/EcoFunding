@@ -10,13 +10,12 @@ const StyledForm = styled.form`
   align-items: center;
   margin-top: 10%;
   font-family: 'Dm Sans';
-  
 `;
 
 const StyledInput = styled.input`
   padding: 10px;
+  width: 24rem;
   border: 1px solid #ccc;
-  border-radius: 5px;
 `;
 
 const StyledLabel = styled.label`
@@ -26,12 +25,26 @@ const StyledLabel = styled.label`
   gap: 5px;
 `;
 
+const RoleButton = styled.button`
+  padding: 10px;
+  width: 24rem;
+  border: 2px solid ${props => props.isSelected ? '#242a32' : '#ccc'};
+  background-color: ${props => props.isSelected ? '#242a32' : 'white'};
+  color: ${props => props.isSelected ? 'white' : 'black'};
+  cursor: pointer;
+  
+  &:hover {
+    background-color: #242a32;
+    color: white;
+  }
+`;
+
 const StyledButton = styled.button`
   padding: 10px 50px;
   background-color: #2ebc15;
   color: white;
   border: none;
-  border-radius: 5px;
+  width: 24rem;
   cursor: pointer;
 
   &:hover {
@@ -51,8 +64,15 @@ const MobileInput = ({ onChange, value }) => {
 };
 
 const FirstStep = ({ nextStep, updateFormData }) => {
-  const { register, handleSubmit, setValue } = useForm();
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm();
   const [mobileNumber, setMobileNumber] = useState('');
+  const [selectedRole, setSelectedRole] = useState('');
+
+  const handleMobileInputChange = (e) => {
+    const formattedPhoneNumber = formatPhoneNumber(e.target.value);
+    setMobileNumber(formattedPhoneNumber);
+    setValue('mobileNumber', formattedPhoneNumber, { shouldValidate: true });
+  };
 
   const formatPhoneNumber = (value) => {
     if (!value) return value;
@@ -65,26 +85,31 @@ const FirstStep = ({ nextStep, updateFormData }) => {
     return `(${phoneNumber.slice(0, 2)}) ${phoneNumber.slice(2, 7)}-${phoneNumber.slice(7, 11)}`;
   };
 
-  const handleMobileInputChange = (e) => {
-    const formattedPhoneNumber = formatPhoneNumber(e.target.value);
-    setMobileNumber(formattedPhoneNumber);
-    setValue('mobileNumber', formattedPhoneNumber, { shouldValidate: true });
+  const handleRoleSelection = (role) => {
+    setSelectedRole(role);
+    setValue('role', role, { shouldValidate: true });
   };
 
   const onSubmit = (data) => {
-    updateFormData(data);
+    updateFormData({ ...data, role: selectedRole });
     nextStep();
   };
-
   return (
     <StyledForm onSubmit={handleSubmit(onSubmit)}>
       <StyledInput type="text" placeholder="Nome" {...register("firstName", { required: true, maxLength: 80 })} />
-      
+      <span style={{ fontSize: 12, color: 'red' }}>{errors.firstName && "Preencha este campo"}</span>
       <StyledInput type="text" placeholder="Sobrenome" {...register("lastName", { required: true, maxLength: 100 })} />
-      <MobileInput value={mobileNumber} onChange={handleMobileInputChange} />
+      <span style={{ fontSize: 12, color: 'red' }}>{errors.lastName && "Preencha este campo"}</span>
+      <MobileInput value={mobileNumber} onChange={(e) => handleMobileInputChange(e)} />
+      <span style={{ fontSize: 12, color: 'red' }}>{errors.mobileNumber && "Preencha este campo"}</span>
+      
       <StyledLabel>
-        Parceiro <StyledInput type="radio" value="Parceiro" {...register("role", { required: true })} />
-        Investidor <StyledInput type="radio" value="Investidor" {...register("role", { required: true })} />
+        <RoleButton isSelected={selectedRole === 'Parceiro'} onClick={() => handleRoleSelection('Parceiro')}>
+          Parceiro
+        </RoleButton>
+        <RoleButton isSelected={selectedRole === 'Investidor'} onClick={() => handleRoleSelection('Investidor')}>
+          Investidor
+        </RoleButton>
       </StyledLabel>
       <StyledButton type="submit">Próxima etapa</StyledButton>
     </StyledForm>

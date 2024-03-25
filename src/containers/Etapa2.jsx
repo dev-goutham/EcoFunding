@@ -29,6 +29,7 @@ const StyledButton = styled.input`
   color: white;
   border: none;
   border-radius: 5px;
+  width: 24rem;
   cursor: pointer;
 
   &:hover {
@@ -42,7 +43,8 @@ const InfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  height: 40vh;
+  
+  height: auto;
   margin-top: 10%;
   margin-bottom: 5%;
   font-family: 'Dm Sans';
@@ -54,6 +56,7 @@ const InfoText = styled.p`
   font-size: 16px;
   margin: 0 auto;
   text-align: start;
+  width: 24rem;
 `;
 
 
@@ -77,16 +80,16 @@ const ThirdStep = ({ formData, prevStep }) => {
   return (
     <InfoContainer>
       <h2>Confirm Information</h2>
-      <InfoText>First Name: {formData.firstName}</InfoText>
-      <InfoText>Last Name: {formData.lastName}</InfoText>
-      <InfoText>Mobile Number: {formData.mobileNumber}</InfoText>
-      <InfoText>Role: {formData.role}</InfoText>
+      <InfoText>Nome: {formData.firstName}</InfoText>
+      <InfoText>Sobrenome: {formData.lastName}</InfoText>
+      <InfoText>Número de celular: {formData.mobileNumber}</InfoText>
+      <InfoText>Formulário: {formData.role}</InfoText>
       {/* Display additional details based on role */}
       {formData.detailParceiro && <InfoText>Detail for Parceiro: {formData.detailParceiro}</InfoText>}
       {formData.detailInvestidor && <InfoText>Detail for Investidor: {formData.detailInvestidor}</InfoText>}
       
-      <StyledButton as="button" type="button" onClick={prevStep}>Back</StyledButton>
-      <StyledButton as="button" type="button" onClick={handleSubmit}>Confirm and Submit</StyledButton>
+      <StyledButton as="button" type="button" onClick={prevStep}>Voltar</StyledButton>
+      <StyledButton as="button" type="button" onClick={handleSubmit}>Confirmar e Enviar</StyledButton>
     </InfoContainer>
   );
 };

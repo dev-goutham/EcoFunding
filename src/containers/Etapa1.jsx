@@ -6,19 +6,24 @@ import styled from 'styled-components';
 // StyledForm, StyledInput, StyledButton
 const StyledForm = styled.form`
   display: flex;
-  flex-direction: column;
-  gap: 10px; /* Adjust the gap as needed */
+  flex-direction: row;
+  justify-content: center;
   height: auto;
+  gap: 20px;
   align-items: center;
   margin-bottom: 5%;
   margin-top: 10%;
   font-family: 'Dm Sans';
 `;
-
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
 const StyledInput = styled.input`
   padding: 10px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  width: 24rem;
 `;
 
 const StyledLabel = styled.label`
@@ -32,7 +37,7 @@ const StyledButton = styled.button`
   background-color: #2ebc15;
   color: white;
   border: none;
-  border-radius: 5px;
+  width: 20rem;
   cursor: pointer;
 
   &:hover {
@@ -73,9 +78,10 @@ const SecondStep = ({ nextStep, prevStep, updateFormData, formData }) => {
   };
   return (
     <StyledForm onSubmit={handleSubmit(onSubmit)}>
+      <StyledButton type="button" onClick={prevStep}>Voltar</StyledButton>
       {formData.role === "Parceiro" ? (
         <>
-          
+          <Column>
           <StyledInput type="text" placeholder="CNPJ/CPF" {...register("cnpjCpf", { required: true })} />
           <span style={{ fontSize: 12, color: 'red' }}>{errors.cnpjCpf && "CNPJ/CPF inválido"}</span>
         
@@ -100,10 +106,11 @@ const SecondStep = ({ nextStep, prevStep, updateFormData, formData }) => {
          
           <StyledInput type="text" placeholder="Estado" {...register("estado", { required: true })} />
           <span style={{ fontSize: 12, color: 'red' }}>{errors.estado && "Preencha este campo"}</span>
+          </Column>
         </>
       ) : (
         <>
-        
+        <Column>
         <StyledInput type="text" placeholder="CNPJ" {...register("cnpj", { required: true, pattern: /\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}/ })} />
         <span style={{ fontSize: 12, color: 'red' }}>{errors.cnpj && "CNPJ inválido"}</span>
         
@@ -119,12 +126,12 @@ const SecondStep = ({ nextStep, prevStep, updateFormData, formData }) => {
           <StyledInput type="text" placeholder="Nome do representante" {...register("nomeDoRepresentante", { required: true })} />
           <span style={{ fontSize: 12, color: 'red' }}>{errors.nomeDoRepresentante && "Preencha este campo"}</span>
 
-      
+          </Column>
         </>
       )}
       
-      <StyledButton type="button" onClick={prevStep}>Back</StyledButton>
-      <StyledButton type="submit">Next</StyledButton>
+      
+      <StyledButton type="submit">Próxima Etapa</StyledButton>
     </StyledForm>
   );
 };

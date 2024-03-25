@@ -94,6 +94,15 @@ const Navbar = styled.div`
       text-decoration: none;
     }
   }
+  @media (min-width: 300px) {
+    font-size: 12px; /* Adjusted for mobile */
+    a {
+      margin-top: 20px; /* Adjusted for mobile */
+      cursor: pointer;
+      color: #c8c8c8;
+      text-decoration: none;
+    }
+  }
 `;
 
 const NewsletterSection = styled.section`
