@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
-
+import { FaLongArrowAltRight } from 'react-icons/fa';
 // Assuming these styled components were defined in FirstStep or a separate file
 // StyledForm, StyledInput, StyledButton
 const StyledForm = styled.form`
@@ -14,6 +14,9 @@ const StyledForm = styled.form`
   margin-bottom: 5%;
   margin-top: 10%;
   font-family: 'Dm Sans';
+  @media (max-width: 768px) {
+    flex-direction: column;
+    }
 `;
 const Column = styled.div`
   display: flex;
@@ -24,6 +27,9 @@ const StyledInput = styled.input`
   padding: 10px;
   border: 1px solid #ccc;
   width: 24rem;
+  @media (max-width: 768px) {
+    width: 200px;
+    }
 `;
 
 const StyledLabel = styled.label`
@@ -43,12 +49,16 @@ const StyledButton = styled.button`
   &:hover {
     background-color: #249a12;
   }
+  @media (max-width: 768px) {
+    width: 200px;
+    }
 `;
 
 const Label = styled.label`
   margin-bottom: 5px;
   font-weight: bold;
 `;
+
 const SecondStep = ({ nextStep, prevStep, updateFormData, formData }) => {
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
     defaultValues: {
@@ -131,7 +141,10 @@ const SecondStep = ({ nextStep, prevStep, updateFormData, formData }) => {
       )}
       
       
-      <StyledButton type="submit">Próxima Etapa</StyledButton>
+      <StyledButton type="submit">
+          <FaLongArrowAltRight color="white" size="24" />
+      </StyledButton>
+
     </StyledForm>
   );
 };

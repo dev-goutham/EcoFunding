@@ -50,6 +50,8 @@ const InfoContainer = styled.div`
   font-family: 'Dm Sans';
   h2 {	
     text-align: center;	
+    font-family: 'Lexend Tera', sans-serif;
+    text-transform: uppercase;
   }
 `;
 const InfoText = styled.p`
@@ -79,7 +81,7 @@ const ThirdStep = ({ formData, prevStep }) => {
   };
   return (
     <InfoContainer>
-      <h2>Confirm Information</h2>
+      <h2>Confirme seus dados</h2>
       <InfoText>Nome: {formData.firstName}</InfoText>
       <InfoText>Sobrenome: {formData.lastName}</InfoText>
       <InfoText>Número de celular: {formData.mobileNumber}</InfoText>

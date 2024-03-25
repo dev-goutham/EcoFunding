@@ -20,7 +20,8 @@ const Container = styled.div`
   align-items: center; // Center children horizontally
   max-width: 1300px; // Maximum width to match other elements
   width: 100%; // Ensure it takes up available space
-  margin: auto;
+  padding: 0;
+  
   
 
   @media (min-width: 768px) {

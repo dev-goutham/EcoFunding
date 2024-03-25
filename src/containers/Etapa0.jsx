@@ -16,6 +16,9 @@ const StyledInput = styled.input`
   padding: 10px;
   width: 24rem;
   border: 1px solid #ccc;
+  @media (max-width: 768px) {
+    width: 200px;
+    }
 `;
 
 const StyledLabel = styled.label`
@@ -37,6 +40,9 @@ const RoleButton = styled.button`
     background-color: #242a32;
     color: white;
   }
+  @media (max-width: 768px) {
+    width: 200px;
+    }
 `;
 
 const StyledButton = styled.button`
@@ -50,6 +56,9 @@ const StyledButton = styled.button`
   &:hover {
     background-color: #249a12;
   }
+  @media (max-width: 768px) {
+    width: 200px;
+    }
 `;
 
 const MobileInput = ({ onChange, value }) => {
