@@ -8,8 +8,8 @@ const Container = styled.div`
     background-color: white;
     background-position: center;
     background-size: cover;
-    height: 100vh;
-    margin-top: 400px;
+    
+   
     
     
 `;
@@ -26,12 +26,14 @@ text-transform: uppercase;
 `;
 const Paragraph = styled.p`
     text-align: start;
+    font-family: "Dm Sans", sans-serif;
 `;
 const Img = styled.img`
     
 `;
 const Ul = styled.ul`
        text-align: start;
+       font-family: "Dm Sans", sans-serif;
 `;
 
 const Page1= () => {

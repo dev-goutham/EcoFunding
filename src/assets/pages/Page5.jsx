@@ -25,12 +25,14 @@ const H1 = styled.h1`
 `;
 const Paragraph = styled.p`
     text-align: start;
+    font-family: "Dm Sans", sans-serif;
 `;
 const Img = styled.img`
     
 `;
 const Ul = styled.ul`
        text-align: start;
+       font-family: "Dm Sans", sans-serif;
 `;
 
 const Page4= () => {
