@@ -18,7 +18,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center; // Center children horizontally
-  max-width: 1300px; // Maximum width to match other elements
+  
   width: 100%; // Ensure it takes up available space
   padding: 0;
   

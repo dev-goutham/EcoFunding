@@ -23,7 +23,7 @@ root.render(
   <Router>
   <Header  />
     <App />
-  <Rodape></Rodape>
+  <Rodape id="rodape" />
     </Router>
     </Auth0Provider>
   </React.StrictMode>

@@ -28,7 +28,7 @@ const HomePage = () => {
         
         <FAQ id="faq"/>
         
-        <Rodape id="rodape"/>
+        
         
         
         </div>
