@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
-import Header from './/components/Header';
+import App from './App.js';
+import Header from './components/Header.js';
 import { HashRouter as Router } from "react-router-dom";
 import './index.css';
 import { Auth0Provider } from '@auth0/auth0-react';
+import Rodape from 'components/Rodape.js';
 // name: 
 // domain: dev-fo5w6egbquu50h0p.us.auth0.com
 // clientID: 2rgsfqcqwDUVTEEDHJkOZPNL7jlQ4syi
@@ -22,7 +23,7 @@ root.render(
   <Router>
   <Header  />
     <App />
-  
+  <Rodape></Rodape>
     </Router>
     </Auth0Provider>
   </React.StrictMode>

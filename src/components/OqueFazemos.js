@@ -4,9 +4,7 @@ import styled from 'styled-components';
 import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import 'react-animation/dist/keyframes.css';
-import Mapa from './Mapa';
-import { useMarker } from './earth/MarkerContext';
-import { MediumAndDown } from './breakpoints';
+import { MediumAndDown } from './breakpoints.jsx';
 import Fundo from '../assets/FUNDO_GLOBO.webp';
 import { Link } from 'react-router-dom';
 import EcoAlgo from '../assets/EcoAlgo.png'
@@ -167,13 +165,9 @@ const OqueFazemos = ({ id }) => {
   const [showContent, setShowContent] = useState(true);
   const controls = useAnimation();
   const { ref, inView } = useInView({ threshold: 0.1 });
-  const { selectedMarker } = useMarker();
+  
   const { width } = useWindowSize(); // Use the custom hook
-  useEffect(() => {
-    console.log('Selected Marker changed:', selectedMarker);
-  }, [selectedMarker]);
-  
-  
+
   useEffect(() => {
     if (inView) {
       controls.start("visible");

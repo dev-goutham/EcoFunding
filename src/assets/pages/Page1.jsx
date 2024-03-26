@@ -20,7 +20,9 @@ const TextContainer = styled.div`
     text-align: center;
 `;
 const H1 = styled.h1`
-
+ width: 100%;
+ font-family: "Lexend Tera", sans-serif;
+text-transform: uppercase;
 `;
 const Paragraph = styled.p`
     text-align: start;
@@ -81,7 +83,7 @@ imagem de uma empresa sem esforços reais de sustentabilidade, o chamado "greenw
                 <li>Integridade dos Projetos: A qualidade e a integridade dos projetos geradores de créditos de carbono são 
 essenciais para assegurar que as reduções de emissões sejam reais, mensuráveis, permanentes e adicionais.</li>
             </Ul>
-            <Img src="https://placekitten.com/200/300"></Img>
+           
             <H1>Conclusões</H1>
             <Paragraph>Os créditos de carbono são ferramentas valiosas na luta contra as mudanças climáticas, oferecendo um meio para 
 mobilizar recursos financeiros para a transição para uma economia de baixo carbono. Embora não sejam uma 

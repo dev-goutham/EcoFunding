@@ -1,9 +1,9 @@
 //globe.js
 import React from 'react';
-import useTextureLoader from './useTextureLoader';
-import { MarkerProvider, useMarker } from './MarkerContext'; // Assuming Marker is its own component
+import useTextureLoader from './useTextureLoader.js';
+import { MarkerProvider, useMarker } from './MarkerContext.js'; // Assuming Marker is its own component
 import colorMap from '../../assets/textures/8k_earth_daymap.png';
-import markers from './markers'; // Assuming markers is its own component
+import markers from './markers.js'; // Assuming markers is its own component
 import { FaLocationDot } from "react-icons/fa6";
 import { Html } from '@react-three/drei';
 

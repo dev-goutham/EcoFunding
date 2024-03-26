@@ -8,8 +8,7 @@ const Container = styled.div`
     background-color: white;
     background-position: center;
     background-size: cover;
-    height: 100vh;
-    margin-top: 400px;
+
     
     
 `;
@@ -20,7 +19,9 @@ const TextContainer = styled.div`
     text-align: center;
 `;
 const H1 = styled.h1`
-
+     width: 100%;
+     font-family: "Lexend Tera", sans-serif;
+     text-transform: uppercase;
 `;
 const Paragraph = styled.p`
     text-align: start;
@@ -36,58 +37,35 @@ const Page4= () => {
     return (
         <Container>
             <TextContainer>
-            <H1>O que são Créditos de Carbono?</H1>
-            <Paragraph>Os créditos de carbono são parte essencial do esforço global para combater as mudanças climáticas. Eles funcionam 
-                    como instrumentos financeiros que representam a redução de emissões de gases de efeito estufa (GEE). Abaixo, 
-                    detalhamos uma visão geral sobre os créditos de carbono, seu funcionamento e importância.
-                    <Ul>
-                        <li> Unidade de Medida: Um crédito de carbono equivale à redução de uma tonelada métrica de dióxido de 
-carbono ou de um gás de efeito estufa equivalente.</li>
-                        <li>Moeda Ambiental: Podem ser vistos como uma "moeda" que quantifica o esforço de redução ou remoção 
-de emissões de gases de efeito estufa.</li>
-                    </Ul>
-                    
-            </Paragraph>
-            <H1>Como Funciona o Mercado de Créditos de Carbono?</H1>
-            <Paragraph>
-                <Ul>
-                    <li>Geração de Créditos: Créditos são gerados por projetos que reduzem, evitam ou capturam emissões. 
-                        Exemplos incluem reflorestamento, projetos de energia renovável, captura e armazenamento de carbono, 
-                        entre outros.</li>
-                                            <li>Comércio: O mercado permite que entidades que reduzem emissões além de suas obrigações vendam 
-                        créditos de carbono para entidades que precisam ou desejam compensar suas emissões</li>
-                                            <li>Regulação: O mercado é regulado por normas internacionais, como o Protocolo de Kyoto e o Acordo de 
-                        Paris, e pode também estar sujeito a regulamentações nacionais ou regionais.</li>
-                                            <li>Compliance e Voluntário: Existem dois tipos de mercados de créditos de carbono - o mercado regulado 
-                        (compliance), para empresas e países que estão legalmente obrigados a reduzir emissões, e o mercado 
-                        voluntário, para aqueles que desejam compensar suas emissões por iniciativa própria.</li>
-                </Ul>
-            </Paragraph>
-            <H1>Por que os Créditos de Carbono são Importantes?</H1>
-            <Ul>
-                <li>Incentivo Econômico: Criam um incentivo financeiro para a redução das emissões, tornando mais lucrativo 
-investir em tecnologias limpas e práticas sustentáveis</li>
-                <li>Flexibilidade: Oferecem flexibilidade para empresas e países que enfrentam desafios na redução direta de 
-suas emissõe</li>
-                <li>Financiamento de Projetos Sustentáveis: Os recursos obtidos pela venda de créditos de carbono podem 
-financiar projetos de sustentabilidade que, de outra forma, poderiam não ser viáveis.</li> 
-            </Ul>
-            <Ul>
-                <li>Não Substituem Reduções Diretas: A compra de créditos de carbono não deve ser vista como substituta 
-para a redução direta de emissões. Empresas e países devem priorizar a redução de sua própria pegada de 
-carbono antes de recorrer à compensação</li>
-                <li> Risco de Greenwashing: Há um risco de que a compra de créditos de carbono seja usada para melhorar a 
-imagem de uma empresa sem esforços reais de sustentabilidade, o chamado "greenwashing".</li>
-                <li>Integridade dos Projetos: A qualidade e a integridade dos projetos geradores de créditos de carbono são 
-essenciais para assegurar que as reduções de emissões sejam reais, mensuráveis, permanentes e adicionais.</li>
-            </Ul>
-            <Img src="https://placekitten.com/200/300"></Img>
-            <H1>Conclusões</H1>
-            <Paragraph>Os créditos de carbono são ferramentas valiosas na luta contra as mudanças climáticas, oferecendo um meio para 
-mobilizar recursos financeiros para a transição para uma economia de baixo carbono. Embora não sejam uma 
-panaceia, eles são componentes importantes de uma estratégia multifacetada para alcançar as metas de redução de 
-emissões globais e promover a sustentabilidade ambiental, econômica e socials</Paragraph>
-</TextContainer>
+                <H1>Entendendo a Pegada de Carbono: Impacto e Gestão</H1>
+                <Paragraph>
+                    A pegada de carbono é uma métrica essencial para entender e gerenciar o impacto ambiental das atividades
+                    humanas, especialmente no contexto corporativo. Ela representa a totalidade de gases de efeito estufa (GEEs)
+                    emitidos direta ou indiretamente por uma empresa ou atividade. Estes gases incluem, mas não se limitam a, dióxido
+                    de carbono (CO2), metano (CH4), óxido nitroso (N2O), vapor d'água (H2O) e ozônio (O3).
+                    <br />
+                    A relevância da pegada de carbono se dá principalmente por sua associação direta com o aquecimento global e as
+                    mudanças climáticas. As emissões de GEEs contribuem para o efeito estufa, que aumenta a temperatura média do
+                    planeta, causando consequências como o derretimento de calotas polares, alterações climáticas severas e
+                    fenômenos meteorológicos extremos.
+                </Paragraph>
+                <Paragraph>
+                    Empresas responsáveis buscam medir e reduzir sua pegada de carbono através de estratégias como a otimização de
+                    processos, uso de matérias-primas sustentáveis, escolha de fontes de energia renováveis, gestão eficiente de
+                    resíduos e adoção de práticas de logística verde. Este esforço não só melhora a qualidade de vida da comunidade e
+                    preserva o meio ambiente local, mas também contribui para a luta global contra as mudanças climáticas.
+                </Paragraph>
+                <Paragraph>
+                    Ao comunicar sobre pegada de carbono em seu site, é importante destacar a relevância dessa métrica, os métodos
+                    para sua medição e as estratégias para sua redução. Este conteúdo deve ser apresentado de forma educativa e
+                    motivacional, encorajando a ação e o comprometimento dos leitores com práticas sustentáveis.
+                </Paragraph>
+                <Paragraph>
+                    Reconhecendo a importância deste tema, comprometemo-nos a medir, gerenciar e comunicar nossa pegada de
+                    carbono de maneira transparente. Através da inovação e adoção de práticas sustentáveis, trabalhamos não apenas
+                    para minimizar nosso impacto ambiental, mas também para liderar pelo exemplo e inspirar a ação coletiva.
+                </Paragraph>
+            </TextContainer>
         </Container>
         
     );

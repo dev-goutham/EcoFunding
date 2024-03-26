@@ -1,8 +1,8 @@
 // MarkerContext.js
 import React, { createContext, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Earth } from './index';
-import markersData from './markers'; // Renamed to avoid naming conflict
+import { Earth } from './index.jsx';
+import markersData from './markers.js'; // Renamed to avoid naming conflict
 
 const MarkerContext = createContext();
 
