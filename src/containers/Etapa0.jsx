@@ -6,7 +6,8 @@ const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
   gap: 10px; /* Adjust the gap as needed */
-  height: 40vh;
+  height: auto;
+  margin-bottom: 5%;
   align-items: center;
   margin-top: 10%;
   font-family: 'Dm Sans';

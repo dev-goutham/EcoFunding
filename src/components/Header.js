@@ -148,7 +148,7 @@ const Header = () => {
           <li><a href="#sobre" className="nav-menu-list" onClick={(e) => handleScroll(e, 'sobre')}>SOBRE</a></li>
           <li><a href="#parceria" className="nav-menu-list" onClick={(e) => handleScroll(e, 'parceria')}>PARCERIA</a></li>
           <li><a href="#faq" className="nav-menu-list" onClick={(e) => handleScroll(e, 'faq')}>FAQ</a></li>
-          <li><a href="#contato" className="nav-menu-list1" onClick={(e) => handleScroll(e, 'contato')}>CONTATO</a></li>
+          <li><a href="#rodape" className="nav-menu-list1" onClick={(e) => handleScroll(e, 'rodape')}>CONTATO</a></li>
         </NavManu>
         <FaBars style={{ fill: 'black' }} className="menuToggleBtn" onClick={handleToggleOpen} />
       </StyledHeader>

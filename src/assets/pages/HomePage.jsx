@@ -30,7 +30,7 @@ const HomePage = () => {
         
         <FAQ id="faq"/>
         
-        <Rodape />
+        <Rodape id="rodape"/>
         
         
         </div>
