@@ -1,22 +1,24 @@
+
 import React from "react";
 import styled from "styled-components";
 import { FiSearch } from "react-icons/fi";
+import { useAuth } from "../../config/AuthContext.js"; // Ensure this path is correct for your project
+
 function Navbar() {
+  const { currentUser } = useAuth(); // Use the useAuth hook to get the current user
+  const userName = currentUser?.displayName || "User Name"; // Fallback to a default name if not available
+
   return (
     <NavbarContainer>
       <Text>
-        Good morning,
-        <span> Kishan</span>
+        BOA VISITA,
+        <span style={{fontFamily: 'DmSans'}}> {userName}</span> {/* Dynamically display the user's name */}
       </Text>
-      <InputContainer>
-        <Icon>
-          <FiSearch />
-        </Icon>
-        <Input type="text" placeholder="Search for projects" />
-      </InputContainer>
+     
     </NavbarContainer>
   );
 }
+
 
 const NavbarContainer = styled.nav`
   display: flex;

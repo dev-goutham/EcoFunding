@@ -21,7 +21,7 @@ function Earnings() {
 const EarningsCard = styled.div`
   height: 100%;
   width: 14rem;
-  background-color: ${themeColor};
+  background-color: #2c3e50;
   padding: 1rem;
   border-radius: 1rem;
   color: white;

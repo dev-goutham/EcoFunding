@@ -20,13 +20,13 @@ const Div = styled.span`
   border-radius: 1rem;
   font-weight: 500;
   color: white;
-  background-color: ${themeColor};
+  background-color: #2ebc15;
   cursor: pointer;
   ${({ clean }) =>
     clean &&
     `background-color: transparent;
-    border: 0.05rem solid ${themeColor};
-     color:${themeColor};`}
+    border: 0.05rem solid #2ab806 };
+     color: #2ab806;`}
   ${({ glow }) =>
     glow &&
     `
