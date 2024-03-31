@@ -25,14 +25,11 @@ function MainContent() {
         </SectionOne>
         <SectionTwo>
           <ColumnOne2>
-            <InvoiceContainer>
-              <TitleText>Recent Invoices</TitleText>
-              <Invoices />
-            </InvoiceContainer>
-            <JoinSlack />
+           
+            
           </ColumnOne2>
           <ColumnTwo2>
-            <TitleText>Recommended Project</TitleText>
+            <TitleText>Rrojetos recomendados</TitleText>
             <ProjectRecommendation />
           </ColumnTwo2>
         </SectionTwo>
@@ -95,8 +92,9 @@ const ColumnTwo1 = styled.div`
   flex-direction: column;
   height: 115%;
   width: 100%;
+  
   @media screen and (min-width: 320px) and (max-width: 1080px) {
-    height: max-content;
+    height: 100%;
     justify-content: center;
     align-items: center;
   }

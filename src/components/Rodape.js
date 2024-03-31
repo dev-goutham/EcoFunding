@@ -72,7 +72,7 @@ const SocialMediaIcons = styled.div`
 `;
 
 const IconImg = styled.img`
-  width: 13.5px; /* Adjusted for mobile */
+  width: 20.5px; /* Adjusted for mobile */
 `;
 
 const Navbar = styled.div`
@@ -175,13 +175,13 @@ function Rodape() {
         </Sidebar>
         <ContentWrapper>
           <Navbar>
-            <div style={{ fontFamily: 'Lexend Tera', fontWeight: 500, fontSize: '8px', color: 'rgba(255, 255, 255, 1)' }}>EMPRESA</div>
+            <div style={{ fontFamily: 'Lexend Tera', fontWeight: 500, fontSize: '12px', color: 'rgba(255, 255, 255, 1)' }}>EMPRESA</div>
             <a onClick={(e) => handleScroll(e, 'sobre')}>Início</a>
             <a onClick={(e) => handleScroll(e, 'parceria')}>Parcerias</a>
             <a >Contato</a>
           </Navbar>
           <Navbar>
-            <div style={{ fontFamily: 'Lexend Tera', fontWeight: 500, fontSize: '8px', color: 'rgba(255, 255, 255, 1)' }}>SERVIÇOS</div>
+            <div style={{ fontFamily: 'Lexend Tera', fontWeight: 500, fontSize: '12px', color: 'rgba(255, 255, 255, 1)' }}>SERVIÇOS</div>
             <a href="https://www.gov.br/cvm/pt-br">CVM</a>
             <a href="https://semil.sp.gov.br/">SEMIL</a>
             <a onClick={(e) => handleScroll(e, 'esg')}>ESG</a>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { FaBars } from "react-icons/fa";
 import Logo from "../assets/LOGOTIPO.webp";
-
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
 const StyledHeader = styled.header`
   
   width: 100%;
@@ -123,7 +123,7 @@ const Div = styled.div`
 
 const Header = () => {
   const [isToggleOpen, setIsToggleOpen] = useState(false);
-
+  const navigate = useNavigate();
   const handleToggleOpen = () => {
     setIsToggleOpen(!isToggleOpen);
   };
@@ -133,7 +133,9 @@ const Header = () => {
     document.querySelectorAll('[id]').forEach((el) => console.log(el.id));
     scrollToSection(sectionId);
   };
-
+  const handleNavigation = () => {
+    navigate("/register"); // Use the path to your register route
+};
   return (
     <Div>
       <StyledHeader>
@@ -149,6 +151,7 @@ const Header = () => {
           <li><a href="#parceria" className="nav-menu-list" onClick={(e) => handleScroll(e, 'parceria')}>PARCERIA</a></li>
           <li><a href="#faq" className="nav-menu-list" onClick={(e) => handleScroll(e, 'faq')}>FAQ</a></li>
           <li><a href="#rodape" className="nav-menu-list1" onClick={(e) => handleScroll(e, 'rodape')}>CONTATO</a></li>
+          <li><a href="#dashboard" className="nav-menu-list1" onClick={handleNavigation}>DASHBOARD</a></li>
         </NavManu>
         <FaBars style={{ fill: 'black' }} className="menuToggleBtn" onClick={handleToggleOpen} />
       </StyledHeader>

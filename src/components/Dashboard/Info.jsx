@@ -26,8 +26,7 @@ function Info() {
             </InfoContainer>
           </Row>
           <Row justify>
-            <Badge content="mobile app" glow />
-            <Badge content="branding" glow />
+           
           </Row>
         </CardContent>
       </Card>
@@ -74,7 +73,7 @@ const Row = styled.div`
   `}
 `;
 const Digit = styled.div`
-  background-color: ${themeColor};
+  background-color: #2ebc15;
   padding: 0.8rem 1rem;
   font-size: 1.3rem;
   border-radius: 1rem;

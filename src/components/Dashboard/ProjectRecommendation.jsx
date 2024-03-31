@@ -11,25 +11,24 @@ function ProjectRecommendation() {
         <Detail>
           <InfoContainer>
             <Avatar>
-              <img src={AvatarImage} alt="" />
+              <img src="" alt="" />
             </Avatar>
             <Info>
-              <InfoName>Thomas Martin</InfoName>
+              <InfoName>Lucas Goularte</InfoName>
               <InfoUpdate>Updated 10m ago</InfoUpdate>
             </Info>
           </InfoContainer>
-          <Badge content="Design" />
+          <Badge content="Especialista em projetos" />
         </Detail>
         <Title>
-          Need a designer to form branding essentials for my business.
+          Oportunidade de investimento verde
         </Title>
         <ProjectInfo>
-          Looking for a talented brand designer to create all the branding
-          materials for my new startup.
+          Conheça a nova usina de biogas para geração de energia limpa e creditos ambientais.
         </ProjectInfo>
         <PriceContainer>
-          <Price>$8700/month</Price>
-          <Badge content="Full Time" clean />
+          <Price>R$ 5.000.000</Price>
+          <Badge content="Invista agora" />
         </PriceContainer>
       </CardContent>
     </RecommendProject>
