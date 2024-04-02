@@ -4,7 +4,7 @@ import { ClaimBtn } from './style/ClaimButton.styled'
 const ClaimButton = () => {
     return (
         <ClaimBtn>
-            Cadastre-se Agora
+            Faça login
         </ClaimBtn>
     );
 };

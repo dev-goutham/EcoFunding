@@ -22,7 +22,7 @@ export const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-
+ 
   /* TABLET */
   @media only screen and (max-width: 768px) {
     width: 100%;

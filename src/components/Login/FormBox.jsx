@@ -12,6 +12,19 @@ const FormBoxLogin = () => {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
 
+    // Translation function
+    const translateErrorCodeToPortuguese = (errorCode) => {
+        const errorMessages = {
+            "auth/user-not-found": "Nenhum usuário encontrado com este e-mail.",
+            "auth/wrong-password": "Senha incorreta. Por favor, tente novamente.",
+            "auth/email-already-in-use": "Este e-mail já está sendo usado por outra conta.",
+            "auth/weak-password": "A senha é muito fraca.",
+            "auth/too-many-requests": "Muitas tentativas falhadas. Tente novamente mais tarde.",
+            // Add more error codes and translations as needed
+        };
+        return errorMessages[errorCode] || "Ocorreu um erro. Por favor, tente novamente.";
+    };
+
     const loginHandler = async (e) => {
         e.preventDefault();
         const { email, password } = formData;
@@ -21,8 +34,9 @@ const FormBoxLogin = () => {
                 navigate("/dashboard");
             })
             .catch((error) => {
-                setError(error.message);
-                console.error(error.code, error.message);
+                const translatedError = translateErrorCodeToPortuguese(error.code);
+                setError(translatedError);
+                console.error(error.code, translatedError);
             });
     };
 
@@ -33,20 +47,24 @@ const FormBoxLogin = () => {
                 navigate("/dashboard");
             })
             .catch((error) => {
-                setError(error.message);
-                console.error(error.code, error.message);
+                const translatedError = translateErrorCodeToPortuguese(error.code);
+                setError(translatedError);
+                console.error(error.code, translatedError);
             });
     };
 
     const changeHandler = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
-  // Handler for navigating to the register page
-  const handleRegisterNavigation = () => {
-    navigate("/register"); // Use the path to your register route
-};
+
+    // Handler for navigating to the register page
+    const handleRegisterNavigation = () => {
+        navigate("/register"); // Use the path to your register route
+    };
+
     return (
         <Form onSubmit={loginHandler}>
+          <h1> LOGIN </h1>
             {inputData.map(input => (
                 <InputField
                     key={input.id}
@@ -57,15 +75,15 @@ const FormBoxLogin = () => {
             ))}
             <Wrapper>
                 <ClaimButton type="submit" />
-                <button style={{ marginTop: '10px', width: '100%', height: '50px', backgroundColor: 'rgba(233, 232, 227, 0.753)', color: '  white' }} type="button" onClick={googleLoginHandler}>
+                <button style={{ marginTop: '10px', width: '100%', height: '50px', backgroundColor: 'rgba(233, 232, 227, 0.753)', color: 'white' }} type="button" onClick={googleLoginHandler}>
                     Login com Google
                 </button>
                 {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
                 <Terms>
                     Clicando no botão você aceita nossos <span>Termos e serviços</span>
                 </Terms>
-                <button onClick={handleRegisterNavigation} style={{ color: 'white', background: 'none', border: 'none', padding: '10px', cursor: 'pointer' }}>
-                    Cadastre-se
+                <button onClick={handleRegisterNavigation} style={{ color: 'white', background: 'none', border: 'none', padding: '10px', cursor: 'pointer', fontFamily: 'Lexend Tera' }}>
+                    CADASTRE-SE
                 </button>
             </Wrapper>
         </Form>

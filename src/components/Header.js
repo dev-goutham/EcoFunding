@@ -121,6 +121,7 @@ const Div = styled.div`
   }
 };
 
+
 const Header = () => {
   const [isToggleOpen, setIsToggleOpen] = useState(false);
   const navigate = useNavigate();
@@ -151,7 +152,7 @@ const Header = () => {
           <li><a href="#parceria" className="nav-menu-list" onClick={(e) => handleScroll(e, 'parceria')}>PARCERIA</a></li>
           <li><a href="#faq" className="nav-menu-list" onClick={(e) => handleScroll(e, 'faq')}>FAQ</a></li>
           <li><a href="#rodape" className="nav-menu-list1" onClick={(e) => handleScroll(e, 'rodape')}>CONTATO</a></li>
-          <li><a href="#dashboard" className="nav-menu-list1" onClick={handleNavigation}>DASHBOARD</a></li>
+         
         </NavManu>
         <FaBars style={{ fill: 'black' }} className="menuToggleBtn" onClick={handleToggleOpen} />
       </StyledHeader>

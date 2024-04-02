@@ -11,6 +11,11 @@ export const Form = styled.form`
   gap: 25px;
   box-shadow: 0px 4px 0px rgba(0,0,0,0.3);
   padding: 40px 0px;
+  h1 {
+    font-size: 24px; 
+    font-weight: bold;
+    color: #fff;
+  }
 
   /* LAPTOP */
   @media only screen and (max-width: 1115px) {
@@ -31,7 +36,7 @@ export const Terms = styled.p`
   margin-top: 5px;
 
   span {
-    color: #FF7979;
+    color: #fff;
   }
 
   /* MOBILE */

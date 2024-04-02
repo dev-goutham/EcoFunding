@@ -10,7 +10,7 @@ function App() {
       <LearnCode>
         <ContentWrapper>
           <h1>
-            Cadastre-se ou faça login acessar o dashboard
+            Faça login acessar o dashboard
           </h1>
           <p>
           Veja informações sobre seu investimento sustentável e acompanhe seus ganhos em tempo real.
@@ -20,7 +20,7 @@ function App() {
 
       {/* Form Wrapper*/}
       <Wrapper>
-    
+        
         <FormBoxLogin />
       </Wrapper>
     </Container>

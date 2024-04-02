@@ -37,7 +37,7 @@ function ProjectRecommendation() {
 
 const RecommendProject = styled.div`
   border-radius: 1rem;
-  height: 130%;
+  height: auto;
   padding: 1rem;
   background-color: white;
   width: 27.5vw;

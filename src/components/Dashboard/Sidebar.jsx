@@ -1,74 +1,97 @@
 
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { RiHomeLine, RiFileCopyLine } from "react-icons/ri";
 import { FaWallet } from "react-icons/fa";
 import { AiOutlinePieChart } from "react-icons/ai";
 import Badge from "./Badge";
 import { useAuth } from "../../config/AuthContext.js"; // Adjust the path as necessary
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
+import { updateProfile } from "firebase/auth";
 import { darkThemeColor } from "../../utils";
 import { signOut } from "firebase/auth";
 import { auth } from "../../config/firebase";
-
+import pic from "../../assets/user.svg";
 
 
 function Sidebar() {
   const { currentUser } = useAuth();
-
-  const userPhoto = currentUser?.photoURL || "path/to/default/avatarImage.jpeg"; 
+  const [selectedFile, setSelectedFile] = useState(null);
+  const userPhoto = currentUser?.photoURL || pic;
   const userName = currentUser?.displayName || "User Name";
 
-  // Adjusted Logout function
-  const logout = async () => {
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
+
+  const uploadImage = async () => {
+    if (!selectedFile) return;
+
+    const storage = getStorage();
+    const storageReference = storageRef(storage, `user_images/${currentUser.uid}/${selectedFile.name}`);
+    uploadBytes(storageReference, selectedFile)
+      .then((snapshot) => {
+        return getDownloadURL(snapshot.ref);
+      })
+      .then((downloadURL) => {
+        updateProfile(currentUser, {
+          photoURL: downloadURL
+        }).then(() => {
+          alert("Profile picture updated successfully!");
+          window.location.reload();
+          // Update UI or state as necessary to reflect the new profile picture
+        }).catch((error) => {
+          console.error("Error updating profile picture:", error);
+        });
+      })
+      .catch((error) => {
+        console.error("Error uploading file:", error);
+      });
+  };
+
+  // Logout function
+  const handleLogout = async () => {
     try {
-      await signOut(auth); // Using auth from useAuth
-      window.location.reload(); // Refresh the page after successful logout
+      await signOut(auth);
+     
     } catch (error) {
       console.error("Logout Error:", error);
+      alert("Failed to log out.");
     }
   };
 
   return (
     <Container>
       <ProfileContainer>
-        <Avatar src={userPhoto} alt="User Avatar" />
+        {/* Make the Avatar clickable for uploading an image */}
+        <AvatarInput>
+          <Avatar src={userPhoto} alt="User Avatar" onClick={() => document.getElementById('fileInput').click()} />
+          <input id="fileInput" type="file" onChange={handleFileChange} style={{ display: 'none' }} />
+        </AvatarInput>
+        {selectedFile && <button onClick={uploadImage} style={{ marginTop: '10px', backgroundColor: '#2ebc15', color: 'white', borderRadius: '16px', padding: '10px' }}>Upload Image</button>}
         <Name>{userName}</Name>
-        <Badge content="Investidor Nivel 1" />
+        {/* Logout Button */}
+       
       </ProfileContainer>
       <LinksContainer>
         <Links>
-          <Link>
-            <RiHomeLine />
-            <h3>Dashboard</h3>
-          </Link>
-          <Link>
-            <RiFileCopyLine />
-            <h3>Projects</h3>
-          </Link>
-          <Link>
-            <FaWallet />
-            <h3>Invoices</h3>
-          </Link>
-          <Link>
-            <AiOutlinePieChart />
-            <h3>Reports</h3>
-          </Link>
+          <Link>Inicio</Link>
+          <Link>Projetos</Link>
+          <Link>a</Link>
+          <Link>a</Link>
           
-         
-          {/* Logout Button */}
-          <LogoutButton onClick={logout}>
-            <h3>Logout</h3>
-          </LogoutButton>
-
         </Links>
-        <ContactContainer>
-          <span>Having troubles?</span>
-          <a >Contact us</a>
-        </ContactContainer>
+        
       </LinksContainer>
+      <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+      
     </Container>
   );
 }
+const AvatarInput = styled.div`
+  cursor: pointer;
+  // Style as needed
+`;
 
 
 const Container = styled.div`

@@ -13,6 +13,8 @@ import Login from './assets/pages/Login.jsx';
 import PainelDeControle from './assets/pages/PainelDeControle.jsx';
 import { createGlobalStyle } from 'styled-components';
 import ProtectedRoute from './assets/pages/PortectedRoute.jsx';
+import AdminDashboardPage from 'assets/pages/AdminDashboardPage.jsx';
+import AdminRoute from 'assets/pages/AdminRoute.jsx';
 
    export const GlobalStyle = createGlobalStyle`
      @import url('https://fonts.googleapis.com/css2?family=Lexend+Tera:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
@@ -41,6 +43,9 @@ function App() {
         <Route path="/dashboard" element={<ProtectedRoute>
           <PainelDeControle />
         </ProtectedRoute>} />
+        <Route path="/admindashboard" element={<AdminRoute>
+          <AdminDashboardPage />
+        </AdminRoute>} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 

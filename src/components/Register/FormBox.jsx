@@ -11,11 +11,13 @@ const FormBoxRegister = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({ name: '', email: '', password: '' });
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false); // New state to manage loading status
 
     const submitHandler = async (e) => {
         e.preventDefault();
         const { email, password, name } = formData;
 
+        setIsLoading(true); // Indicate the start of a registration process
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 // Update the user profile with the name
@@ -27,8 +29,13 @@ const FormBoxRegister = () => {
                 navigate("/dashboard");
             })
             .catch((error) => {
-                setError(error.message);
-                console.error(error.code, error.message);
+                const errorMessage = error.message;
+                // Here, you could translate or map error messages to be more user-friendly
+                setError(errorMessage);
+                console.error(error.code, errorMessage);
+            })
+            .finally(() => {
+                setIsLoading(false); // Reset loading status regardless of outcome
             });
     };
 
@@ -38,6 +45,7 @@ const FormBoxRegister = () => {
 
     return (
         <Form onSubmit={submitHandler}>
+            <h1> CADASTRO </h1>
             {inputData.map(input => (
                 <InputField
                     key={input.id}
@@ -47,7 +55,8 @@ const FormBoxRegister = () => {
                 />
             ))}
             <Wrapper>
-                <ClaimButton />
+                {/* Disable the button while the registration is in progress */}
+                <ClaimButton type="submit" disabled={isLoading} />
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 <Terms>
                     Clicando no botão você aceita nossos <span>Termos e serviços</span>

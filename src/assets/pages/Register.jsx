@@ -10,7 +10,7 @@ function App() {
       <LearnCode>
         <ContentWrapper>
           <h1>
-            Conheça o painel de controle Eco!
+            Conheça o painel de controle Eco
           </h1>
           <p>
           Veja informações sobre seu investimento sustentável e acompanhe seus ganhos em tempo real.

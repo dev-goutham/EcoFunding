@@ -1,37 +1,56 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import AvatarImage from "../../assets/avatarImage2.jpg";
-import AvatarImage2 from "../../assets/avatarImage3.jpg";
-import { cardShadow, hoverEffect, themeColor } from "../../utils";
+import { cardShadow, hoverEffect } from "../../utils";
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { useAuth } from "../../config/AuthContext"; // Make sure the path is correct
 
 function Projects() {
+  const [projects, setProjects] = useState([]); // State to store fetched projects
+  const { currentUser } = useAuth(); // Assuming useAuth provides the current user
+
+  useEffect(() => {
+    if (!currentUser) return; // Exit if currentUser is not available
+
+    const db = getFirestore();
+    const projectsQuery = query(collection(db, "projects"), where("userIds", "array-contains", currentUser.uid));
+
+    getDocs(projectsQuery).then((querySnapshot) => {
+      const projectsData = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setProjects(projectsData); // Set the fetched projects in the state
+    }).catch(error => console.error("Error fetching projects:", error));
+  }, [currentUser]);
+
+  // Only render the YourProjects component if there are projects to display
+  if (projects.length === 0) {
+    return null; // or you could return a message indicating there are no projects
+  }
+
   return (
     <YourProjects>
-      <Project>
-        <Avatar>
-          <img src={AvatarImage} alt="" />
-        </Avatar>
-        <Detail>
-          <Title>Logo design for Bakery</Title>
-          <SubTitle>1 day remaining</SubTitle>
-        </Detail>
-      </Project>
-      <Project>
-        <Avatar>
-          <img src={AvatarImage2} alt="" />
-        </Avatar>
-        <Detail>
-          <Title>Personal branding project</Title>
-          <SubTitle>5 days remaining</SubTitle>
-        </Detail>
-      </Project>
-      <AllProjects>See all projects</AllProjects>
+      <Title> SEUS PROJETOS </Title>
+      {projects.map(project => (
+        <Project key={project.id}>
+          <Avatar>
+            <img src={project.avatarUrl || "path/to/default/avatar.png"} alt="" />
+          </Avatar>
+          <Detail>
+            <Title>{project.title}</Title>
+            <SubTitle>{project.subtitle}</SubTitle>
+          </Detail>
+        </Project>
+      ))}
+      <AllProjects>Veja todos os projetos</AllProjects>
     </YourProjects>
   );
 }
 
+// Styled components remain the same...
+
 const YourProjects = styled.div`
-  height: 70%;
+  height: 87.5%;
   background-color: white;
   margin: 0;
   padding: 1rem;
@@ -43,7 +62,7 @@ const YourProjects = styled.div`
   }
   @media screen and (min-width: 320px) and (max-width: 1080px) {
     height: max-content;
-    width: 75%;
+    width: 80%;
     margin-top: 1rem;
   }
 `;
@@ -65,16 +84,19 @@ const Detail = styled.div`
 `;
 const Title = styled.h3`
   font-weight: 500;
+  text-transform: uppercase;
+  font-family: "Lexend Tera", sans-serif;
   @media screen and (min-width: 320px) and (max-width: 1080px) {
     font-size: 1rem;
   }
 `;
 const SubTitle = styled.h5`
   font-weight: 300;
+  font-family: "Dm Sans", sans-serif;
 `;
 const AllProjects = styled.h5`
   text-align: end;
-  color: ${themeColor};
+  color: darkblue;
   cursor: pointer;
 `;
 

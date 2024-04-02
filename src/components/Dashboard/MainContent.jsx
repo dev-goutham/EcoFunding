@@ -19,7 +19,7 @@ function MainContent() {
             <Info />
           </ColumnOne1>
           <ColumnTwo1>
-            <TitleText>Your Projects</TitleText>
+           
             <Projects />
           </ColumnTwo1>
         </SectionOne>
@@ -29,7 +29,7 @@ function MainContent() {
             
           </ColumnOne2>
           <ColumnTwo2>
-            <TitleText>Rrojetos recomendados</TitleText>
+            <TitleText> PROJETOS RECOMENDADOS </TitleText>
             <ProjectRecommendation />
           </ColumnTwo2>
         </SectionTwo>
@@ -66,7 +66,7 @@ const SubContainer = styled.div`
 const SectionOne = styled.div`
   display: flex;
   justify-content: space-between;
-  height: 40%;
+  height: auto;
   gap: 2rem;
   width: 100%;
   @media screen and (min-width: 320px) and (max-width: 1080px) {
@@ -103,6 +103,7 @@ const ColumnTwo1 = styled.div`
 const TitleText = styled.h3`
   height: 20%;
   /* padding-top */
+  text-transform: uppercase;
 `;
 
 const SectionTwo = styled.div`
@@ -137,6 +138,7 @@ const InvoiceContainer = styled.div`
 `;
 
 const ColumnTwo2 = styled.div`
+  margin-left: -2rem;
   @media screen and (min-width: 320px) and (max-width: 1080px) {
     display: flex;
     justify-content: center;
