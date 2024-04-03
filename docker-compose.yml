@@ -2,7 +2,7 @@ version: "3"
 
 services:
   ecofunding_site:
-    image: LuigiHard/ecofunding-frontend:latest
+    image: luigihard/ecofunding:latest
     expose:
       - 80
     restart: always
