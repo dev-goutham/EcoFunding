@@ -2,11 +2,11 @@ version: "3"
 
 services:
   ecofunding_site:
-    image: nome/imagem:latest
+    image: luigihard/ecofunding-frontend:latest
     expose:
       - 80
     restart: always
-    container_name: solarium-site
+    container_name: ecofunding_site
     environment:
       PORT: 80
       HTTP_PORT: 80
@@ -21,4 +21,4 @@ services:
 networks:
   service_network:
     external:
-      name: nome_da_rede
+      name:  ecofunding_service_network
