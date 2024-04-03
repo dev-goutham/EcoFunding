@@ -6,6 +6,8 @@ import Image1 from "../assets/Image1.png";
 import Image2 from "../assets/Image2.png";
 import Image3 from "../assets/Image3.png";
 
+import { firestore } from '../config/firebase.js';
+import { collection, addDoc } from 'firebase/firestore';
 
 const Collumn = styled.div`
   display: flex;
@@ -57,7 +59,8 @@ const ContentWrapper = styled.section`
 const Logo = styled.img`
   max-width: 50%; /* Adjusted for mobile */
   @media (max-width: 991px) {
-    max-width: 100%;
+    max-width: 300px;
+    margin: 0 auto
   }
 `;
 
@@ -83,8 +86,8 @@ const Navbar = styled.div`
   padding: 50px; /* Adjusted for mobile */
   font-size: 6.5px; /* Adjusted for mobile */
   @media (max-width: 991px) {
-    margin-right: 5rem; /* Adjusted for mobile */
-    margin-left: -2.5rem; /* Adjusted for mobile */
+    margin-right: 2.5em; /* Adjusted for mobile */
+    margin-left: 2.5rem; /* Adjusted for mobile */
   }
   @media (min-width: 992px) {
     font-size: 12px; /* Adjusted for mobile */
@@ -109,7 +112,7 @@ const Navbar = styled.div`
 const NewsletterSection = styled.section`
   display: flex;
   flex-direction: column;
-  color: #2ebc15;
+  color: #c8c8c8;
   font-size: 8px; /* Adjusted for mobile */
 `;
 
@@ -146,6 +149,15 @@ const ContentText = styled.p`
   line-height: 1.6;
   margin-top: 100px; /* Adjusted for mobile */
 `;
+const StyledRow = styled.div`
+@media (max-width: 991px) {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+`;
 const scrollToSection = (sectionId) => {
   const element = document.getElementById(sectionId);
   if (element) {
@@ -156,6 +168,27 @@ const scrollToSection = (sectionId) => {
 };
 
 function Rodape() {
+  const [email, setEmail] = useState('');
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent the form from refreshing the page
+    try {
+      const docRef = await addDoc(collection(firestore, "newsletter"), {
+        email: email,
+        timestamp: new Date(), // Optional: Add a timestamp
+      });
+      console.log("Document written with ID: ", docRef.id);
+      setEmail(''); // Clear the input after successful submission
+      // Optional: Show a success message to the user
+    } catch (e) {
+      console.error("Error adding document: ", e);
+      // Optional: Show an error message to the user
+    }
+  };
   const handleScroll = (event, sectionId) => {
     event.preventDefault(); // Prevent default action of opening a new tab or navigating away
     document.querySelectorAll('[id]').forEach((el) => console.log(el.id));
@@ -175,6 +208,7 @@ function Rodape() {
             </SocialMediaIcons>
         </Sidebar>
         <ContentWrapper>
+          <StyledRow>
           <Navbar>
             <div style={{ fontFamily: 'Lexend Tera', fontWeight: 500, fontSize: '12px', color: 'rgba(255, 255, 255, 1)' }}>EMPRESA</div>
             <a onClick={(e) => handleScroll(e, 'sobre')}>Início</a>
@@ -188,12 +222,13 @@ function Rodape() {
             <a onClick={(e) => handleScroll(e, 'esg')}>ESG</a>
             
           </Navbar>
+          </StyledRow>
           <Collumn>
             <NewsletterSection>
               <div>SE INSCREVA NA NOSSA <span style={{ fontWeight: 600, color: "rgba(46,188,21,1)" }}>NEWSLETTER</span></div>
-              <NewsletterForm>
-                <NewsletterInput type="email" placeholder="Digite seu e-mail" aria-label="Digite seu e-mail" />
-                <SubmitButton>Enviar</SubmitButton>
+              <NewsletterForm onSubmit={handleSubmit}>
+                <NewsletterInput type="email" placeholder="Digite seu e-mail" aria-label="Digite seu e-mail" value={email} onChange={handleEmailChange} />
+                <SubmitButton type="submit" >Enviar</SubmitButton>
               </NewsletterForm>
             </NewsletterSection>
           </Collumn>

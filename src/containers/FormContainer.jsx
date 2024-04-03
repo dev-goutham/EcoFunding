@@ -72,7 +72,7 @@ export default function FormContainer() {
       case 'Investidor':
         return 'Investidor';
       default:
-        return 'Formulários';
+        return 'Formulário';
     }
   };
 

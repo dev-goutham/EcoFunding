@@ -42,7 +42,8 @@ const RoleButton = styled.button`
     color: white;
   }
   @media (max-width: 768px) {
-    width: 200px;
+    width: 225px;
+    margin: 10px 0;
     }
 `;
 
