@@ -2,7 +2,7 @@ version: "3"
 
 services:
   ecofunding_site:
-    image: luigihard/ecofunding-frontend:latest
+    image: luigihard/ecofunding:latest
     expose:
       - 80
     restart: always
@@ -20,5 +20,5 @@ services:
 
 networks:
   service_network:
-    external:
-      name:  ecofunding_service_network
+    external: true 
+    name:  ecofunding_service_network
