@@ -78,9 +78,8 @@ const FrameText = styled.div`
   overflow: visible;
   @media (max-width: 768px) {
     width: 100%;
-    margin-top: -2em;
-    margin-left: 100px;
-    margin-right: 30px;
+    margin-top: -4em;
+    
 
   }
 `;
@@ -236,6 +235,8 @@ const Paragraph1 = styled.p`
   
   @media (max-width: 768px) {
     font-size: 8px;
+    text-align: center;
+    margin: 10px auto;
   
   }
 `;
@@ -252,7 +253,8 @@ font-size: 24px;
 margin-right: 50px;
 @media (max-width: 768px) {
     font-size: 12px;
-    text-align: start;
+    text-align: center;
+    
     
   }
 
@@ -271,7 +273,7 @@ const Button1 = styled.button`
   margin-bottom: 2em;
   @media (max-width: 768px) {
     font-size: 8px;
-    
+    margin: 0 auto;
 
   }
 
@@ -286,6 +288,18 @@ const StyledCarouselProvider = styled(CarouselProvider)`
 
   @media (max-width: 768px) {
     height: 80vh;
+  }
+  @media (max-width: 668px) {
+    height: 85vh;
+  }
+  @media (max-width: 568px) {
+    height: 90vh;
+  }
+  @media (max-width: 468px) {
+    height: 95vh;
+  }
+  @media (max-width: 368px) {
+    height: 100vh;
   }
 `;
 
