@@ -296,7 +296,7 @@ const StyledCarouselProvider = styled(CarouselProvider)`
     height: 90vh;
   }
   @media (max-width: 468px) {
-    height: 95vh;
+    height: 90vh;
   }
   @media (max-width: 368px) {
     height: 100vh;

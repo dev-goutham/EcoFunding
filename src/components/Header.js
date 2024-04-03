@@ -19,11 +19,12 @@ const StyledHeader = styled.header`
     width: 20vw; 
     @media (max-width: 768px){
       text-align: left; // Center the content on smaller screens
+       // Center the content on smaller screens
       width:  50vw;
       height: 100px;
       margin-top: 20px;
       overflow: visible; // Hide overflow content
-      margin-left: 0; // Reset margin
+      margin-left: -10em; // Reset margin
     }
   }
   
