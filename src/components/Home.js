@@ -78,11 +78,9 @@ const FrameText = styled.div`
   overflow: visible;
   @media (max-width: 768px) {
     width: 100%;
-    margin-right: 3em;
-    margin-left: 5em;
-    margin-right: 5em;
     margin-top: -2em;
-    
+    margin-left: 100px;
+    margin-right: 30px;
 
   }
 `;
