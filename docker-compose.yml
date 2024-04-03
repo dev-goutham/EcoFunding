@@ -20,5 +20,5 @@ services:
 
 networks:
   service_network:
-    external:
-      name:  ecofunding_service_network
+    external: true 
+    name:  ecofunding_service_network
