@@ -81,9 +81,9 @@ function Sidebar() {
           <Link>a</Link>
           
         </Links>
-        
+        <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+      
       </LinksContainer>
-      <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
       
     </Container>
   );
@@ -154,6 +154,7 @@ const Link = styled.li`
   gap: 1rem;
   color: #e4e4e4;
   align-items: center;
+  text-transform: uppercase;
   
   cursor: pointer;
   h3 {

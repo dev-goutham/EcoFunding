@@ -80,6 +80,7 @@ const FrameText = styled.div`
     width: 100%;
     margin-right: 3em;
     margin-left: 5em;
+    margin-right: 5em;
     margin-top: -2em;
     
 
@@ -253,7 +254,8 @@ font-size: 24px;
 margin-right: 50px;
 @media (max-width: 768px) {
     font-size: 12px;
-  
+    text-align: start;
+    
   }
 
   
@@ -283,6 +285,10 @@ const Button1 = styled.button`
 `;
 const StyledCarouselProvider = styled(CarouselProvider)`
   height: 95vh;
+
+  @media (max-width: 768px) {
+    height: 80vh;
+  }
 `;
 
 const Home = ({ imgurl, altText, title, paragraph, button, transform }) => {

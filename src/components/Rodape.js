@@ -68,6 +68,7 @@ const SocialMediaIcons = styled.div`
   gap: 50px; /* Adjusted for mobile */
   @media (max-width: 991px) {
     flex-wrap: wrap;
+    justify-content: center
   }
 `;
 
@@ -83,7 +84,7 @@ const Navbar = styled.div`
   font-size: 6.5px; /* Adjusted for mobile */
   @media (max-width: 991px) {
     margin-right: 5rem; /* Adjusted for mobile */
-    margin-left: 5rem; /* Adjusted for mobile */
+    margin-left: -2.5rem; /* Adjusted for mobile */
   }
   @media (min-width: 992px) {
     font-size: 12px; /* Adjusted for mobile */

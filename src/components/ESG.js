@@ -76,7 +76,7 @@ const Button = styled.button`
     @media (max-width: ${breakpoints.tablet}) {
     width: 200px;
     height: 100px;
-    padding-left: 20px;
+    padding: 10px 20px;
     margin: 10px auto;
   }
   @media (max-width: ${breakpoints.tablet}) {
@@ -133,6 +133,7 @@ const TextImage = styled(motion.div)`
   @media (max-width: ${breakpoints.tablet}) {
     flex-direction: column;
     align-items: stretch;
+    margin: 0 30px;
     
   }
 `;
@@ -144,7 +145,7 @@ const H1 = styled(motion.h1)`
   font-size: 2em;
   font-weight: 600;
   @media (max-width: ${breakpoints.tablet}) {
-    margin: 0 10px;
+    margin: 20px 10px;
     text-align: center;
   }
 `;

@@ -4,6 +4,7 @@ export const ClaimBtn = styled.button`
     width: 100%; 
     height: 56px;
     background-color: #38CC8B;
+    font-family: "Dm Sans", sans-serif;
     color: #fff;
     font-size: 15px;
     font-weight: bold;
