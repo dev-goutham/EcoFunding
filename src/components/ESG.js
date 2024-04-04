@@ -130,6 +130,7 @@ const TextImage = styled(motion.div)`
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  margin-top: 75px;
   @media (max-width: ${breakpoints.tablet}) {
     flex-direction: column;
     align-items: stretch;
