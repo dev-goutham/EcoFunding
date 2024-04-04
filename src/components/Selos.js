@@ -1,7 +1,7 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import Selo11 from '../assets/Selo11.webp';
+import Selo1 from '../assets/selo1.webp';
 import Selo2 from '../assets/selo2.webp';
 import Selo3 from '../assets/selo3.webp';
 import Selo4 from '../assets/selo4.webp';
@@ -33,7 +33,7 @@ const Selos = styled.img`
 const SelosSection = () => {
   return (
     <SelosContainer>
-      <Selos src={Selo11} alt="EcoFundingGiant" />
+      <Selos src={Selo1} alt="EcoFundingGiant" />
       <Selos src={Selo2} alt="EcoFundingGiant" />
       <Selos src={Selo3} alt="EcoFundingGiant" />
       <Selos src={Selo4} alt="EcoFundingGiant" />

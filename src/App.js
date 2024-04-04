@@ -15,6 +15,8 @@ import { createGlobalStyle } from 'styled-components';
 import ProtectedRoute from './assets/pages/PortectedRoute.jsx';
 import AdminDashboardPage from 'assets/pages/AdminDashboardPage.jsx';
 import AdminRoute from 'assets/pages/AdminRoute.jsx';
+import AdminFormPage from 'assets/pages/AdminForm.jsx';
+import AdminLogin from 'assets/pages/AdminLogin.jsx';
 
    export const GlobalStyle = createGlobalStyle`
      @import url('https://fonts.googleapis.com/css2?family=Lexend+Tera:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
@@ -47,7 +49,9 @@ function App() {
           <AdminDashboardPage />
         </AdminRoute>} />
         <Route path="/login" element={<Login />} />
+        <Route path="/adminlogin" element={<AdminLogin />} />
         <Route path="/register" element={<Register />} />
+        <Route path="adminform" element={<AdminRoute><AdminFormPage /> </AdminRoute>} />
 
       </Routes>
     </div>

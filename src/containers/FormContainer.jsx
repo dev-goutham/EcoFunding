@@ -30,7 +30,7 @@ const H1 = styled.h1`
   font-family: 'Lexend Tera';
 `;
 
-export default function FormContainer() {
+export default function FormContainer({ id }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -78,7 +78,7 @@ export default function FormContainer() {
 
   return (
     <>
-      <StepperContainer>
+      <StepperContainer id={id}>
         <H1>{getTitle()}</H1> {/* Dynamically set the title */}
         <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'row' }}>
           {[1, 2, 3].map((step) => (
