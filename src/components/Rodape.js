@@ -150,6 +150,10 @@ const ContentText = styled.p`
   margin-top: 100px; /* Adjusted for mobile */
 `;
 const StyledRow = styled.div`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
 @media (max-width: 991px) {
   display: flex;
   flex-direction: row;
