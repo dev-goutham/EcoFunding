@@ -1,6 +1,8 @@
-
 import React from 'react';
 import styled from 'styled-components';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css'; // Optional: Import the effect you want to use
+
 import Selo1 from '../assets/selo1.webp';
 import Selo2 from '../assets/selo2.webp';
 import Selo3 from '../assets/selo3.webp';
@@ -8,35 +10,36 @@ import Selo4 from '../assets/selo4.webp';
 
 const SelosContainer = styled.div`
   display: flex;
-  flex-wrap: wrap; /* Allows items to wrap to the next line on smaller screens */
+  flex-wrap: wrap;
   justify-content: space-around;
   align-items: center;
   background-color: white;
-  padding: 60px 0; /* Add some padding */
+  padding: 60px 0;
   width: 100%;
 `;
 
-const Selos = styled.img`
-  max-width: 7%; /* Ensures image is responsive and scales with its container */
-  height: auto; /* Maintains aspect ratio */
-  flex: 1 1 200px; /* Flex item to allow it to grow and shrink, with a base width of 200px */
+const StyledLazyImage = styled(LazyLoadImage)`
+  max-width: 100px;
+  
+  height: auto;
+  flex: 1 1 200px;
 
   @media (max-width: 768px) {
-    flex: 1 1 150px; /* On smaller screens, reduce the base width */
+    flex: 1 1 150px;
   }
 
   @media (max-width: 480px) {
-    flex: 1 1 100px; /* On very small screens, further reduce the base width */
+    flex: 1 1 100px;
   }
 `;
 
 const SelosSection = () => {
   return (
     <SelosContainer>
-      <Selos src={Selo1} alt="EcoFundingGiant" />
-      <Selos src={Selo2} alt="EcoFundingGiant" />
-      <Selos src={Selo3} alt="EcoFundingGiant" />
-      <Selos src={Selo4} alt="EcoFundingGiant" />
+      <StyledLazyImage src={Selo1} alt="EcoFundingGiant" effect="blur" />
+      <StyledLazyImage src={Selo2} alt="EcoFundingGiant" effect="blur" />
+      <StyledLazyImage src={Selo3} alt="EcoFundingGiant" effect="blur" />
+      <StyledLazyImage src={Selo4} alt="EcoFundingGiant" effect="blur" />
     </SelosContainer>
   );
 };
