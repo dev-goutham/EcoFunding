@@ -11,7 +11,7 @@ const InputField = (props) => {
 
     return (
         <Wrapper>
-            <Input {...inputData} onChange={onChange} onBlur={focusHandler} focused={focused}/>
+            <Input {...inputData}  onChange={onChange} onBlur={focusHandler} focused={focused}/>
             <Error>{errMsg}</Error>
         </Wrapper>
     );

@@ -36,7 +36,7 @@ export const Input = styled.input`
 
     &:invalid {
         border: ${props => props.focused && '2px red solid'};
-        background-color: ${props => props.focused && 'rgba(255, 121, 121, 0.1)'};
+        background-color: ${props => props.focused && '#fff'};
         background-position: bottom 15px right 20px;
     }
 
