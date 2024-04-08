@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-
-const allowedUIDs = ["EsanDapF1VQVartYTvCWUdVu3BB3", "SPECIFIC_USER_UID_2"]; // Update with actual UIDs
+import { Form, Wrapper, Terms } from './style/Form.styled.js';
+import InputField from './InputField.jsx';
+import { Input } from '@mui/icons-material';
+const allowedUIDs = ["EsanDapF1VQVartYTvCWUdVu3BB3", "REE95WSUXvRPzPa9kUTMJ86jbTf2"]; // Update with actual UIDs
 
 function FormBoxLogin() {
   const [email, setEmail] = useState('');
@@ -39,25 +41,25 @@ function FormBoxLogin() {
   };
 
   return (
-    <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '50px', marginLeft: '8em' }}>
-      <input 
+    <Form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '50px', marginLeft: '8em' }}>
+      <InputField 
         type="email" 
         value={email} 
         onChange={(e) => setEmail(e.target.value)} 
         placeholder="Email" 
         required 
-        style={{ width: '200px', padding: '10px', borderRadius: '5px' }}
+        
       />
-      <input 
+      <InputField 
         type="password" 
         value={password} 
         onChange={(e) => setPassword(e.target.value)} 
         placeholder="Password" 
         required 
-        style={{ width: '200px', padding: '10px', borderRadius: '5px' }}
+        
       />
-      <button style={{ width: '225px', padding: '10px', borderRadius: '5px' }} type="submit">Login</button>
-    </form>
+      <button style={{ width: '100%', padding: '10px', borderRadius: '5px', backgroundColor: '#2ee21f', border: 'none', color: 'white' }} type="submit">Login</button>
+    </Form>
   );
 }
 

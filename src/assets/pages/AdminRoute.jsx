@@ -4,7 +4,7 @@ import { useAuth } from '../../config/AuthContext.js';
 
 // Example with a single allowed UID
 // This could also be an array of UIDs if
-const allowedUIDs = ["EsanDapF1VQVartYTvCWUdVu3BB3", "SPECIFIC_USER_UID_2"]; 
+const allowedUIDs = ["EsanDapF1VQVartYTvCWUdVu3BB3", "REE95WSUXvRPzPa9kUTMJ86jbTf2", ""]; 
 function AdminRoute({ children }) {
   const { currentUser } = useAuth();
 

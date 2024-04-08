@@ -10,7 +10,7 @@ export const Form = styled.form`
   align-items: center;
   gap: 25px;
   box-shadow: 0px 4px 0px rgba(0,0,0,0.3);
-  padding: 40px 0px;
+  padding: 40px 40px;
   h1 {
     font-size: 24px; 
     font-weight: bold;

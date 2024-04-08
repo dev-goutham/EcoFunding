@@ -39,7 +39,7 @@ export const Wrapper = styled.div`
 
 
 export const ContentWrapper = styled.div`
-  width: 525px;
+  width: 625px;
   color: #fff;
 
   h1 {

@@ -10,7 +10,7 @@ function App() {
       <LearnCode>
         <ContentWrapper>
           <h1>
-            Faça login acessar os formulários
+            Faça login para acessar os formulários
           </h1>
         
         </ContentWrapper>
