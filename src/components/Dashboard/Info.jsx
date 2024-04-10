@@ -5,18 +5,18 @@ import { getFirestore, collection, query, where, getDocs } from 'firebase/firest
 import { cardShadow, hoverEffect } from "../../utils";
 import { Pie } from 'react-chartjs-2';
 import 'chart.js/auto';
-
+const investmentTypeColors = {
+  Reflorestamento: 'rgb(255, 99, 133)',
+  PainelSolar: 'rgb(54, 163, 235)',
+  Biogas: 'rgb(255, 207, 86)',
+};
 function Info() {
   const { currentUser } = useAuth();
   const [chartData, setChartData] = useState({
     datasets: [],
   });
   const [chartOptions, setChartOptions] = useState({});
-  const investmentTypeColors = {
-    Reflorestamento: 'rgb(255, 99, 133)',
-    PainelSolar: 'rgb(54, 163, 235)',
-    Biogas: 'rgb(255, 207, 86)',
-  };
+  
 
   useEffect(() => {
     if (!currentUser) return;

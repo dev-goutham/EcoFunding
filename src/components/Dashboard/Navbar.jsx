@@ -13,7 +13,7 @@ function Navbar() {
     <NavbarContainer>
       <Text>
         BOA VISITA,
-        <span style={{fontFamily: 'DmSans'}}> {userName}</span> {/* Dynamically display the user's name */}
+        <span style={{fontFamily: 'Dm Sans'}}> {userName}</span> {/* Dynamically display the user's name */}
       </Text>
      
     </NavbarContainer>

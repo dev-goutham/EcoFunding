@@ -7,19 +7,25 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 0.1rem;
 `;
 
 const FormItem = styled.div`
-  width: 80%; /* Occupying 80% of the container width */
-  margin: 10px 0; /* Adjusted for vertical spacing */
-  padding: 20px;
+  width: 20rem; /* Occupying 80% of the container width */
+  margin: 0.1rem 0; /* Adjusted for vertical spacing */
+  padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   cursor: pointer;
   transition: all 0.3s ease; /* Smooth transition for expanding/collapsing */
   overflow: hidden; /* Ensure the content expands within the container */
+  font-family: 'Dm Sans', sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  p {
+    margin: 0;
+  }
 `;
 
 const FormDetails = ({ form }) => {
@@ -73,21 +79,28 @@ const AdminFormPage = () => {
   }, []);
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2 style={{ textAlign: 'center' }}>FORMULÁRIO PARCEIROS</h2>
+    <>
+     
+    <div style={{ justifyContent: 'center', display: 'flex', flexDirection: 'row', minHeight: '70vh', marginTop: '2rem' }}>
+     
+      <div style={{ width: '40%' }}>
+      <h2 style={{ textAlign: 'center', margin: '2rem 12rem' }}>FORMULÁRIO PARCEIROS</h2>
       <Container>
         {forms.filter(form => form.role === "Parceiro").map((form) => (
           <FormDetails key={form.id} form={form} />
         ))}
       </Container>
-
-      <h2 style={{ textAlign: 'center' }}>FORMULARIO INVESTIDORES</h2>
+      </div>
+      <div style={{ width: '40%'}}>
+      <h2 style={{ textAlign: 'center', margin: '2rem 12rem' }}>FORMULARIO INVESTIDORES</h2>
       <Container>
         {forms.filter(form => form.role === "Investidor").map((form) => (
           <FormDetails key={form.id} form={form} />
         ))}
       </Container>
+      </div>
     </div>
+    </>
   );
 };
 
