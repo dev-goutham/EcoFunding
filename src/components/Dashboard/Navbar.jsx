@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { FiSearch } from "react-icons/fi";
 import { useAuth } from "../../config/AuthContext.js"; // Ensure this path is correct for your project
 
+
 function Navbar() {
   const { currentUser } = useAuth(); // Use the useAuth hook to get the current user
   const userName = currentUser?.displayName || "User Name"; // Fallback to a default name if not available

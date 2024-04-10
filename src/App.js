@@ -17,6 +17,10 @@ import AdminDashboardPage from 'assets/pages/AdminDashboardPage.jsx';
 import AdminRoute from 'assets/pages/AdminRoute.jsx';
 import AdminFormPage from 'assets/pages/AdminForm.jsx';
 import AdminLogin from 'assets/pages/AdminLogin.jsx';
+import PainelCreditosAmbientais from 'assets/pages/PainelCreditosAmbientais.jsx';
+import ProjetosBoard from './components/Dashboard/ProjetosBoard.jsx';
+import PainelRelatorios from 'assets/pages/PainelRelatorios.jsx';
+
 
    export const GlobalStyle = createGlobalStyle`
      @import url('https://fonts.googleapis.com/css2?family=Lexend+Tera:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
@@ -45,6 +49,16 @@ function App() {
         <Route path="/dashboard" element={<ProtectedRoute>
           <PainelDeControle />
         </ProtectedRoute>} />
+        <Route path="/dashboard/projetos" element={<ProtectedRoute>
+          <ProjetosBoard />
+        </ProtectedRoute>} />
+        <Route path="/dashboard/creditosambientais" element={<ProtectedRoute>
+          <PainelCreditosAmbientais />
+        </ProtectedRoute>} />
+        <Route path="/dashboard/relatorios" element={<ProtectedRoute>
+          <PainelRelatorios />
+        </ProtectedRoute>} />
+       
         <Route path="/admindashboard" element={<AdminRoute>
           <AdminDashboardPage />
         </AdminRoute>} />

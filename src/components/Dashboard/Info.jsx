@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useAuth } from "../../config/AuthContext"; // Adjust path as necessary
+import { useAuth } from "../../config/AuthContext";
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
-import { cardShadow, hoverEffect } from "../../utils"; // Ensure utils path is correct
+import { cardShadow, hoverEffect } from "../../utils";
+import { Pie } from 'react-chartjs-2';
+import 'chart.js/auto';
 
 function Info() {
-  const [projectCount, setProjectCount] = useState(0);
-  const [projectsThisMonth, setProjectsThisMonth] = useState(0);
-  const [rank, setRank] = useState("Calculating..."); 
   const { currentUser } = useAuth();
+  const [chartData, setChartData] = useState({
+    datasets: [],
+  });
+  const [chartOptions, setChartOptions] = useState({});
+  const investmentTypeColors = {
+    Reflorestamento: 'rgb(255, 99, 133)',
+    PainelSolar: 'rgb(54, 163, 235)',
+    Biogas: 'rgb(255, 207, 86)',
+  };
 
   useEffect(() => {
     if (!currentUser) return;
@@ -20,27 +28,33 @@ function Info() {
       try {
         const querySnapshot = await getDocs(projectsQuery);
         const projectsData = querySnapshot.docs.map(doc => doc.data());
+        const categoryCounts = projectsData.reduce((acc, project) => {
+          const category = project.category || 'Other';
+          acc[category] = (acc[category] || 0) + 1;
+          return acc;
+        }, {});
 
-        // Update state based on fetched data
-        const projectsCount = projectsData.length;
-        setProjectCount(projectsCount);
+        const categories = Object.keys(categoryCounts);
+        const counts = categories.map(category => categoryCounts[category]);
+        const backgroundColors = categories.map(category => investmentTypeColors[category] || 'rgba(201, 203, 207, 0.2)');
+        const borderColors = categories.map(category => investmentTypeColors[category].replace('0.2', '1') || 'rgba(201, 203, 207, 1)');
 
-        // If no projects, you may not need to proceed with further calculations
-        if (projectsCount === 0) {
-          setRank("N/A"); // Update rank to indicate no projects, or adjust as needed
-          return; // Early return to avoid unnecessary calculations
-        }
+        setChartData({
+          labels: categories,
+          datasets: [{
+            label: 'Project Categories',
+            data: counts,
+            backgroundColor: backgroundColors,
+            borderColor: borderColors,
+            borderWidth: 1,
+          }],
+        });
 
-        const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-        const projectsThisMonthCount = projectsData.filter(project => {
-          const projectDate = new Date(project.createdAt); // Assuming there's a 'createdAt' field
-          return projectDate >= startOfMonth;
-        }).length;
-
-        setProjectsThisMonth(projectsThisMonthCount);
-
-        // Set rank based on projects data
-        setRank(calculateRank(projectsData)); 
+        setChartOptions({
+          animation: {
+            animateScale: true,
+          },
+        });
       } catch (error) {
         console.error("Error fetching projects:", error);
       }
@@ -49,47 +63,16 @@ function Info() {
     fetchProjects();
   }, [currentUser]);
 
-  function calculateRank(projectsData) {
-    // Implement your ranking logic here
-    return projectsData.length > 5 ? 1 : projectsData.length; // Dummy logic
-  }
-
-  // If no projects are associated with the user, return null or an optional message
-  if (projectCount === 0) {
-    return null; // Or return a custom component/message indicating no projects are available
-  }
-
-  
   return (
     <InfoCard>
-    <Card>
-      <CardContent>
-        <Row>
-          <Digit>{rank}</Digit>
-          <InfoContainer>
-            <Title>Ranking</Title>
-            <SubTitle>Baseado na quantidade de projetos investidos</SubTitle>
-          </InfoContainer>
-        </Row>
-      </CardContent>
-    </Card>
-    <Card>
-      <CardContent>
-        <Row>
-          <Digit>{projectCount}</Digit>
-          <InfoContainer>
-            <Title>Projects</Title>
-            <SubTitle>{projectsThisMonth} this month</SubTitle>
-          </InfoContainer>
-        </Row>
-      </CardContent>
-    </Card>
-  </InfoCard>
-);
+      <Card>
+        <CardContent>
+          <Pie data={chartData} options={chartOptions} />
+        </CardContent>
+      </Card>
+    </InfoCard>
+  );
 }
-
-
-
 
 
 const InfoCard = styled.div`
