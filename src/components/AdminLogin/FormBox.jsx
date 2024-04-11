@@ -30,7 +30,7 @@ function FormBoxLogin() {
           });
         } else {
           // User is authorized, redirect to the dashboard or appropriate page
-          navigate('/adminform'); // Adjust as necessary
+          navigate('/admindashboard'); // Adjust as necessary
         }
       })
       .catch((error) => {

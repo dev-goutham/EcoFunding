@@ -19,8 +19,10 @@ import AdminFormPage from 'assets/pages/AdminForm.jsx';
 import AdminLogin from 'assets/pages/AdminLogin.jsx';
 import PainelCreditosAmbientais from 'assets/pages/PainelCreditosAmbientais.jsx';
 import ProjetosBoard from './components/Dashboard/ProjetosBoard.jsx';
-import PainelRelatorios from 'assets/pages/PainelRelatorios.jsx';
-
+import PainelRelatorios from './assets/pages/PainelRelatorios.jsx';
+import AdminForm from './components/AdminDashboard/AdminForm.jsx';
+import AdminProjetos from './components/AdminDashboard/AdminProjetos.jsx';
+import AdminUsuarios from './components/AdminDashboard/AdminUsuarios.jsx';
 
    export const GlobalStyle = createGlobalStyle`
      @import url('https://fonts.googleapis.com/css2?family=Lexend+Tera:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
@@ -65,7 +67,9 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/adminlogin" element={<AdminLogin />} />
         <Route path="/register" element={<Register />} />
-        <Route path="adminform" element={<AdminRoute><AdminFormPage /> </AdminRoute>} />
+        <Route path="/admindashboard/formularios" element={<AdminRoute><AdminForm /> </AdminRoute>} />
+        <Route path="/admindashboard/projetos" element={<AdminRoute><AdminProjetos /> </AdminRoute>} />
+        <Route path="/admindashboard/usuarios" element={<AdminRoute><AdminUsuarios /> </AdminRoute>} />
 
       </Routes>
     </div>

@@ -2,21 +2,21 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useAuth } from "../../config/AuthContext";
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
-import { cardShadow, hoverEffect } from "../../utils";
 import { Pie } from 'react-chartjs-2';
 import 'chart.js/auto';
+
 const investmentTypeColors = {
-  Reflorestamento: 'rgb(255, 99, 133)',
-  PainelSolar: 'rgb(54, 163, 235)',
-  Biogas: 'rgb(255, 207, 86)',
+  "Reflorestamento": 'rgb(11, 252, 23)',
+  "Painel Solar": 'rgb(8, 80, 161)',
+  "Biogás": 'rgb(138, 138, 138)',
 };
+
 function Info() {
   const { currentUser } = useAuth();
   const [chartData, setChartData] = useState({
     datasets: [],
   });
   const [chartOptions, setChartOptions] = useState({});
-  
 
   useEffect(() => {
     if (!currentUser) return;
@@ -37,7 +37,7 @@ function Info() {
         const categories = Object.keys(categoryCounts);
         const counts = categories.map(category => categoryCounts[category]);
         const backgroundColors = categories.map(category => investmentTypeColors[category] || 'rgba(201, 203, 207, 0.2)');
-        const borderColors = categories.map(category => investmentTypeColors[category].replace('0.2', '1') || 'rgba(201, 203, 207, 1)');
+        const borderColors = backgroundColors.map(color => color.replace('rgb', 'rgba').replace(')', ', 1)'));
 
         setChartData({
           labels: categories,
@@ -61,7 +61,7 @@ function Info() {
     };
 
     fetchProjects();
-  }, [currentUser]);
+  }, [currentUser]); // Removed chartData from dependencies
 
   return (
     <InfoCard>
@@ -82,10 +82,10 @@ const InfoCard = styled.div`
   border-radius: 1rem;
   padding: 1rem;
   color: white;
-  box-shadow: ${cardShadow};
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: 0.4s ease-in-out;
   &:hover {
-    box-shadow: ${hoverEffect};
+    box-shadow:  0 8px 16px rgba(0, 0, 0, 0.1);
   }
   @media screen and (min-width: 320px) and (max-width: 1080px) {
     width: 80%;

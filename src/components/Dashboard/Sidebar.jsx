@@ -30,29 +30,27 @@ function Sidebar() {
 
   const uploadImage = async () => {
     if (!selectedFile) return;
-
+  
     const storage = getStorage();
-    const storageReference = storageRef(storage, `user_images/${currentUser.uid}/${selectedFile.name}`);
-    uploadBytes(storageReference, selectedFile)
-      .then((snapshot) => {
-        return getDownloadURL(snapshot.ref);
-      })
-      .then((downloadURL) => {
-        updateProfile(currentUser, {
-          photoURL: downloadURL
-        }).then(() => {
-          alert("Profile picture updated successfully!");
-          window.location.reload();
-          // Update UI or state as necessary to reflect the new profile picture
-        }).catch((error) => {
-          console.error("Error updating profile picture:", error);
-        });
-      })
-      .catch((error) => {
-        console.error("Error uploading file:", error);
+    // Use the UID directly as the filename, ensuring the path does not create a nested folder structure
+    const storageReference = storageRef(storage, `user_images/${currentUser.uid}`);
+  
+    try {
+      const snapshot = await uploadBytes(storageReference, selectedFile);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+  
+      await updateProfile(currentUser, {
+        photoURL: downloadURL
       });
+  
+      alert("Profile picture updated successfully!");
+      window.location.reload(); // Consider updating the component state instead for a more React-friendly approach
+    } catch (error) {
+      console.error("Error updating profile picture:", error);
+      alert("Error uploading file. Please try again.");
+    }
   };
-
+  
   // Logout function
   const handleLogout = async () => {
     try {
