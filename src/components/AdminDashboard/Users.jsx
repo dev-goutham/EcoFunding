@@ -161,7 +161,7 @@ function Users() {
         <div>
           {users.map(user => (
             <div key={user.id} style={{ backgroundColor: '#f0f0f0', padding: '10px', borderRadius: '5px', display: 'flex', flexDirection: 'row', gap: '10px' }}>
-              {user.picture && <img src={user.picture} alt="User" style={{ width: '100px', height: '100px' }} />}
+              {user.picture && <img src={user.picture} alt="User" style={{ width: '200px', height: 'auto' }} />}
               <div>
                 <p>ID: {user.id}</p>
                 <p>Display Name: {user.displayName}</p>

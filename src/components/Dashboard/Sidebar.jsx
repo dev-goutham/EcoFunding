@@ -77,7 +77,7 @@ function Sidebar() {
       </ProfileContainer>
       <LinksContainer>
         <Links>
-          <Li><Link to="/dashboard"><IoMdHome size={30} style={{ marginBottom:'-5px' }} /><span style={{ marginLeft: '10px' }}>Painel de Controle</span></Link></Li>
+          <Li><Link to="/dashboard"><IoMdHome size={30} style={{ marginBottom:'-5px', marginLeft: '-20px' }} /><span style={{ marginLeft: '10px' }}>Painel de Controle</span></Link></Li>
           <Li><Link to="/dashboard/projetos"><CiFolderOn size={30} style={{ marginBottom:'-5px' }} /><span style={{ marginLeft: '10px' }}>Projetos Investidos</span></Link></Li>
           <Li><Link to="/dashboard/creditosambientais"><BsCoin  size={30} style={{ marginBottom:'-5px' }} /> <span style={{ marginLeft: '10px' }}>Creditos Ambientais</span></Link></Li>
           <Li><Link to="/dashboard/relatorios"><FaNewspaper size={30} style={{ marginBottom:'-5px' }} /><span style={{ marginLeft: '10px' }}>Relatórios e Análises</span></Link></Li>
@@ -93,7 +93,7 @@ function Sidebar() {
 }
 const AvatarInput = styled.div`
   cursor: pointer;
-  // Style as needed
+  
 `;
 
 
@@ -157,6 +157,8 @@ const Li = styled.li`
   display: flex;
   flex-direction: row; // This ensures horizontal layout
   align-items: center; // Vertically center the items in the list
+  justify-content: center; // Horizontally center the items in the list
+  font-size: 1rem; // Set the font size of the text
   gap: 1rem; // Keep some space between the icon and text
   color: #e4e4e4;
   text-transform: uppercase;
@@ -209,10 +211,11 @@ const LogoutButton = styled.button`
   cursor: pointer;
   margin: 0 30px;
   display: flex;
+  text-align: center;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-
+  gap: 1rem; 
+ 
   &:hover {
     background-color: #249a12; // Slightly darker shade for hover effect
   }

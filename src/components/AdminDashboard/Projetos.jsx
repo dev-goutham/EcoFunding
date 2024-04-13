@@ -31,6 +31,9 @@ const ProjectForm = styled.form`
     width: 100%;
     box-sizing: border-box;
     }
+    textarea {
+        min-height: 16rem;
+    }
     select {
         padding: 15px;
         border: 1px solid #ccc;
@@ -81,6 +84,27 @@ function Projetos() {
   const [editName, setEditName] = useState(""); // NEW: Name for editing
   const [editDescription, setEditDescription] = useState(""); // NEW: Description for editing
 
+  const [projectTrechoTitle1, setProjectTrechoTitle1] = useState("");
+  const [projectTrechoText1, setProjectTrechoText1] = useState("");
+  const [editTrechoTitle1, setEditTrechoTitle1] = useState("");
+  const [editTrechoText1, setEditTrechoText1] = useState("");
+
+  function parseAndBoldText(text) {
+    if (!text) {
+      return ""; // Or return any placeholder text you prefer
+    }
+    // Split text by "**", assuming even indices are normal text, odd indices are bold
+    const parts = text.split('**').map((part, index) => {
+      if (index % 2 === 1) { // Odd indices are bold
+        return <strong key={index}>{part}</strong>;
+      } else {
+        return part; // Normal text
+      }
+    });
+  
+    return parts;
+  }
+
   useEffect(() => {
     const fetchProjects = async () => {
       const querySnapshot = await getDocs(collection(firestore, "projects"));
@@ -88,6 +112,16 @@ function Projetos() {
     };
     fetchProjects();
   }, []);
+  const deleteProject = async (id) => {
+    // Reference to the document in your Firestore collection
+    const projectDocRef = doc(firestore, "projects", id);
+
+    // Delete the document from Firestore
+    await deleteDoc(projectDocRef);
+
+    // Filter out the project from the local state
+    setProjects(projects.filter(project => project.id !== id));
+  };
 
   const addProject = async (e) => {
     e.preventDefault();
@@ -102,28 +136,40 @@ function Projetos() {
     setProjectName("");
     setProjectDescription("");
     setProjectCategory("");
+    setProjectTrechoText1("");
+    setProjectTrechoTitle1("");
   };
 
   // Adjusted update function
   const saveUpdate = async () => {
     if (!editName || !editDescription || !editingId) return;
-
+  
     const projectDoc = doc(firestore, "projects", editingId);
-    await updateDoc(projectDoc, { name: editName, description: editDescription });
-
-    setProjects(projects.map(project => project.id === editingId ? { ...project, name: editName, description: editDescription } : project));
+    await updateDoc(projectDoc, {
+      name: editName,
+      description: editDescription,
+      // Include updates for trechoTitle and trechoText
+      trechoTitle1: editTrechoTitle1,
+      trechoText1: editTrechoText1,
+    });
+  
+    // Update local state
+    setProjects(projects.map(project => project.id === editingId ? {
+      ...project,
+      name: editName,
+      description: editDescription,
+      trechoTitle1: editTrechoTitle1,
+      trechoText1: editTrechoText1
+    } : project));
     setEditingId(null); // Reset editing state
   };
-
-  const deleteProject = async (id) => {
-    await deleteDoc(doc(firestore, "projects", id));
-    setProjects(projects.filter(project => project.id !== id));
-  };
+  
 
   return (
     <Container>
       <h1>Projetos</h1>
       <ProjectForm onSubmit={addProject}>
+        <div>
         <input type="text" value={projectName} onChange={(e) => setProjectName(e.target.value)} placeholder="Nome do Projeto" />
         <textarea value={projectDescription} onChange={(e) => setProjectDescription(e.target.value)} placeholder="Descrição do projeto"></textarea>
         <select type="text" value={projectCategory} onChange={(e) => setProjectCategory(e.target.value)} placeholder="Categoria" >
@@ -132,7 +178,13 @@ function Projetos() {
             <option value="category3">Category 3</option>
             <option value="category4">Category 4</option>
         </select>
-
+        </div>
+        
+        <h1  style={{ marginTop: '100px'}}> trecho 1 </h1>
+        <div >
+        <input type="text" value={projectTrechoTitle1} onChange={(e) => setProjectTrechoTitle1(e.target.value)} placeholder="Trecho 1 titulo" />
+        <textarea value={projectTrechoText1} onChange={(e) => setProjectTrechoText1(e.target.value)} placeholder="Trecho 1 texto"></textarea>
+        </div>
         <Button type="submit">Adicionar Projeto</Button>
       </ProjectForm>
       <ProjectList>
@@ -147,11 +199,16 @@ function Projetos() {
               </>
             ) : (
               <>
+              <div style={{ margin: '10em 0'}}>
                 <h3>{project.name}</h3>
                 <p>{project.description}</p>
                 <h3>{project.category}</h3>
+                <h3>{project.trechoTitle1}</h3>
+                <p>{parseAndBoldText(project.trechoText1)}</p>
                 <Button onClick={() => { setEditingId(project.id); setEditName(project.name); setEditDescription(project.description); }}>Edit</Button>
                 <Button onClick={() => deleteProject(project.id)}>Delete</Button>
+              </div>
+             
               </>
             )}
           </ProjectItem>

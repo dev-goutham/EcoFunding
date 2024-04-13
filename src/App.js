@@ -23,7 +23,7 @@ import PainelRelatorios from './assets/pages/PainelRelatorios.jsx';
 import AdminForm from './components/AdminDashboard/AdminForm.jsx';
 import AdminProjetos from './components/AdminDashboard/AdminProjetos.jsx';
 import AdminUsuarios from './components/AdminDashboard/AdminUsuarios.jsx';
-
+import TemplateLamina from './components/Dashboard/LaminasProjetos/Template.jsx';
    export const GlobalStyle = createGlobalStyle`
      @import url('https://fonts.googleapis.com/css2?family=Lexend+Tera:wght@100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
@@ -59,6 +59,9 @@ function App() {
         </ProtectedRoute>} />
         <Route path="/dashboard/relatorios" element={<ProtectedRoute>
           <PainelRelatorios />
+        </ProtectedRoute>} />
+        <Route path="/dashboard/templatelamina" element={<ProtectedRoute>
+          <TemplateLamina />
         </ProtectedRoute>} />
        
         <Route path="/admindashboard" element={<AdminRoute>

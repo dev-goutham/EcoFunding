@@ -2,11 +2,12 @@
 import styled from "styled-components";
 import Sidebar from "./Sidebar.jsx";
 import MainContent from "./MainContent.jsx";
+import ProjetosInvestidos from "./ProjetosInvestidos.jsx";
 function ProjetosBoard() {
   return (
     <Container>
       <Sidebar />
-      <div style={{ height: '100vh' }}>oi</div>
+      <ProjetosInvestidos />
     </Container>
   );
 }
