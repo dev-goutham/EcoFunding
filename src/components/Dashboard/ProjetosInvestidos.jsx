@@ -32,6 +32,7 @@ const Container = styled.div`
     background-color: #2ebc15;
     color: white;
     cursor: pointer;
+    flex-grow: 1;
     width: 100%;
   
   }
@@ -97,7 +98,7 @@ function ProjetosInvestidos() {
               <p>Modalidade: {project.category}</p>
               <p>Valor Investido: R$ {project.investment}</p>
               <p>Retorno: R$ {project.earnings} em creditos ambientais</p>
-              <Link to={`/projects/${project.id}`}><button > Saiba Mais </button></Link>
+              <Link to={`/projetos/${project.id}`}><button > Saiba Mais </button></Link>
 
               
 

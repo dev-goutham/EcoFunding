@@ -60,7 +60,7 @@ function App() {
         <Route path="/dashboard/relatorios" element={<ProtectedRoute>
           <PainelRelatorios />
         </ProtectedRoute>} />
-        <Route path="/dashboard/templatelamina" element={<ProtectedRoute>
+        <Route path="/projetos/PainelSolarTeste" element={<ProtectedRoute>
           <TemplateLamina />
         </ProtectedRoute>} />
        

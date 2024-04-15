@@ -70,14 +70,14 @@ function Sidebar() {
           <Avatar src={userPhoto} alt="User Avatar" onClick={() => document.getElementById('fileInput').click()} />
           <input id="fileInput" type="file" onChange={handleFileChange} style={{ display: 'none' }} />
         </AvatarInput>
-        {selectedFile && <button onClick={uploadImage} style={{ marginTop: '10px', backgroundColor: '#2ebc15', color: 'white', borderRadius: '16px', padding: '10px' }}>Upload Image</button>}
+        {selectedFile && <button onClick={uploadImage} style={{ border: 'none', marginTop: '10px', backgroundColor: '#2ebc15', color: 'white', borderRadius: '16px', padding: '10px' }}>Upload Image</button>}
         <Name>{userName}</Name>
         {/* Logout Button */}
        
       </ProfileContainer>
       <LinksContainer>
         <Links>
-          <Li><Link to="/dashboard"><IoMdHome size={30} style={{ marginBottom:'-5px', marginLeft: '-20px' }} /><span style={{ marginLeft: '10px' }}>Painel de Controle</span></Link></Li>
+          <Li><Link to="/dashboard"><IoMdHome size={30} style={{ marginBottom:'-5px' }} /><span style={{ marginLeft: '10px' }}>Painel de Controle</span></Link></Li>
           <Li><Link to="/dashboard/projetos"><CiFolderOn size={30} style={{ marginBottom:'-5px' }} /><span style={{ marginLeft: '10px' }}>Projetos Investidos</span></Link></Li>
           <Li><Link to="/dashboard/creditosambientais"><BsCoin  size={30} style={{ marginBottom:'-5px' }} /> <span style={{ marginLeft: '10px' }}>Creditos Ambientais</span></Link></Li>
           <Li><Link to="/dashboard/relatorios"><FaNewspaper size={30} style={{ marginBottom:'-5px' }} /><span style={{ marginLeft: '10px' }}>Relatórios e Análises</span></Link></Li>
@@ -122,7 +122,7 @@ const ProfileContainer = styled.div`
 
 const Avatar = styled.img`
   height: 7rem;
-  border-radius: 6rem;
+  border-radius: 360em;
   margin-top: 20%;
 `;
 

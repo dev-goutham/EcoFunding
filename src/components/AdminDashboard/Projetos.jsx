@@ -1,13 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
-import { firestore } from "../../config/firebase"; // Ensure this path is correct
-import { collection, addDoc, getDocs, updateDoc, doc, deleteDoc } from "firebase/firestore";
+import { firestore } from "../../config/firebase";
+import { collection, getDocs, updateDoc, doc, deleteDoc } from "firebase/firestore";
+import { Bar } from 'react-chartjs-2';
+import ImageField  from "./ImageField";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
+  height: auto;
   gap: 20px;
   margin: 0 auto;
   h1 {
@@ -22,39 +29,44 @@ const ProjectForm = styled.form`
   gap: 10px;
   margin-bottom: 20px;
   width: 30rem;
-  margin: 0 24em;
-  
-    input, textarea{
+  margin: 0 auto; /* Centered the form in the page */
+  input {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     width: 100%;
     box-sizing: border-box;
-    }
-    textarea {
-        min-height: 16rem;
-    }
-    select {
-        padding: 15px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        width: 100%;                                                                             
-    }
-    button {
-        padding: 10px;
-        border: none;
-        border-radius: 5px;
-        background-color: #2ebc15;
-        color: white;
-        cursor: pointer;
-        width: 100%;
-    }
+  }
+  textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    min-height: 24em; /* Adjust as needed */
+    height: 100%; /* Adjust as needed */
+    box-sizing: border-box;
+  }
+  h3 {
+    font-size: 1.5rem;
+    text-transform: uppercase;
+  }
+  button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #2ebc15;
+    color: white;
+    cursor: pointer;
+    width: 100%;
+  
+  }
 `;
 
 const ProjectList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 80%; /* Set a max width for better layout control */
 `;
 
 const ProjectItem = styled.div`
@@ -62,8 +74,13 @@ const ProjectItem = styled.div`
   padding: 10px;
   border-radius: 5px;
   display: flex;
-    flex-direction: column;
-    gap: 10px;
+  flex-direction: column;
+  gap: 10px;
+  img {
+    max-height: 200px;
+    max-width: 200px;
+    object-fit: cover;
+  }
 `;
 
 const Button = styled.button`
@@ -72,145 +89,217 @@ const Button = styled.button`
   border: none;
   border-radius: 5px;
   margin-top: 10px;
+  background-color: #2ebc15;
+  color: white;
 `;
 
 function Projetos() {
   const [projects, setProjects] = useState([]);
-  const [projectName, setProjectName] = useState("");
-  const [projectDescription, setProjectDescription] = useState("");
-  const [projectCategory, setProjectCategory] = useState("");
-  const [editingId, setEditingId] = useState(null); // NEW: Track the currently edited project's ID
-  const [editCategory, setEditCategory] = useState(""); // NEW: Category for editing
-  const [editName, setEditName] = useState(""); // NEW: Name for editing
-  const [editDescription, setEditDescription] = useState(""); // NEW: Description for editing
-
-  const [projectTrechoTitle1, setProjectTrechoTitle1] = useState("");
-  const [projectTrechoText1, setProjectTrechoText1] = useState("");
-  const [editTrechoTitle1, setEditTrechoTitle1] = useState("");
-  const [editTrechoText1, setEditTrechoText1] = useState("");
-
-  function parseAndBoldText(text) {
-    if (!text) {
-      return ""; // Or return any placeholder text you prefer
-    }
-    // Split text by "**", assuming even indices are normal text, odd indices are bold
-    const parts = text.split('**').map((part, index) => {
-      if (index % 2 === 1) { // Odd indices are bold
-        return <strong key={index}>{part}</strong>;
-      } else {
-        return part; // Normal text
-      }
-    });
-  
-    return parts;
-  }
+  const [editProject, setEditProject] = useState(null);
+  const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: [{
+      label: 'Project Data',
+      data: [],
+      backgroundColor: 'rgba(54, 162, 235, 0.2)',
+      borderColor: 'rgba(54, 162, 235, 1)',
+      borderWidth: 1,
+    }],
+  });
 
   useEffect(() => {
     const fetchProjects = async () => {
       const querySnapshot = await getDocs(collection(firestore, "projects"));
-      setProjects(querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+      const projectsData = await Promise.all(querySnapshot.docs.map(async doc => {
+        const project = { ...doc.data(), id: doc.id };
+        const tabContentsSnapshot = await getDocs(collection(firestore, `projects/${doc.id}/tabContents`));
+        project.tabContents = tabContentsSnapshot.docs.reduce((acc, doc) => ({
+          ...acc,
+          [doc.id]: doc.data()
+        }), {});
+        return project;
+      }));
+      setProjects(projectsData);
     };
     fetchProjects();
   }, []);
-  const deleteProject = async (id) => {
-    // Reference to the document in your Firestore collection
-    const projectDocRef = doc(firestore, "projects", id);
+  const deleteProject = useCallback(async (projectId) => {
+    const projectDocRef = doc(firestore, "projects", projectId);
+    try {
+      await deleteDoc(projectDocRef);
+      setProjects(currentProjects => currentProjects.filter(project => project.id !== projectId));
+    } catch (error) {
+      console.error("Failed to delete project:", error);
+    }
+  }, []);
 
-    // Delete the document from Firestore
-    await deleteDoc(projectDocRef);
-
-    // Filter out the project from the local state
-    setProjects(projects.filter(project => project.id !== id));
+  const handleEditChange = (field, value) => {
+    setEditProject(prev => ({ ...prev, [field]: value }));
   };
 
-  const addProject = async (e) => {
-    e.preventDefault();
-    if (!projectName || !projectDescription) return;
+  const handleTabContentChange = (tab, field, value) => {
+    setEditProject(prev => ({
+      ...prev,
+      tabContents: {
+        ...prev.tabContents,
+        [tab]: {
+          ...prev.tabContents[tab],
+          [field]: value
+        }
+      }
+    }));
+  };
+  const updateChartData = (projects) => {
+    const labels = projects.map(p => p.name);
+    const data = projects.map(p => p.value);  // Ensure 'value' is a numeric field in Firestore
 
-    const docRef = await addDoc(collection(firestore, "projects"), {
-      name: projectName,
-      description: projectDescription,
+    setChartData({
+      labels,
+      datasets: [{
+        label: 'Project Values',
+        data,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+      }]
     });
-
-    setProjects([...projects, { name: projectName, description: projectDescription, category: projectCategory,  id: docRef.id }]);
-    setProjectName("");
-    setProjectDescription("");
-    setProjectCategory("");
-    setProjectTrechoText1("");
-    setProjectTrechoTitle1("");
   };
-
-  // Adjusted update function
   const saveUpdate = async () => {
-    if (!editName || !editDescription || !editingId) return;
-  
-    const projectDoc = doc(firestore, "projects", editingId);
-    await updateDoc(projectDoc, {
-      name: editName,
-      description: editDescription,
-      // Include updates for trechoTitle and trechoText
-      trechoTitle1: editTrechoTitle1,
-      trechoText1: editTrechoText1,
+    if (!editProject) return;
+
+    const projectDocRef = doc(firestore, "projects", editProject.id);
+    await updateDoc(projectDocRef, {
+      name: editProject.name,
+      description: editProject.description,
+      category: editProject.category,
     });
-  
-    // Update local state
-    setProjects(projects.map(project => project.id === editingId ? {
-      ...project,
-      name: editName,
-      description: editDescription,
-      trechoTitle1: editTrechoTitle1,
-      trechoText1: editTrechoText1
-    } : project));
-    setEditingId(null); // Reset editing state
+
+    Object.entries(editProject.tabContents).forEach(async ([key, value]) => {
+      const tabContentDocRef = doc(firestore, `projects/${editProject.id}/tabContents`, key);
+      await updateDoc(tabContentDocRef, value);
+    });
+
+    setProjects(prevProjects => prevProjects.map(project => project.id === editProject.id ? { ...project, ...editProject } : project));
+    setEditProject(null); // Exit edit mode
   };
-  
 
   return (
     <Container>
       <h1>Projetos</h1>
-      <ProjectForm onSubmit={addProject}>
-        <div>
-        <input type="text" value={projectName} onChange={(e) => setProjectName(e.target.value)} placeholder="Nome do Projeto" />
-        <textarea value={projectDescription} onChange={(e) => setProjectDescription(e.target.value)} placeholder="Descrição do projeto"></textarea>
-        <select type="text" value={projectCategory} onChange={(e) => setProjectCategory(e.target.value)} placeholder="Categoria" >
-            <option value="category1">Category 1</option>
-            <option value="category2">Category 2</option>
-            <option value="category3">Category 3</option>
-            <option value="category4">Category 4</option>
-        </select>
-        </div>
-        
-        <h1  style={{ marginTop: '100px'}}> trecho 1 </h1>
-        <div >
-        <input type="text" value={projectTrechoTitle1} onChange={(e) => setProjectTrechoTitle1(e.target.value)} placeholder="Trecho 1 titulo" />
-        <textarea value={projectTrechoText1} onChange={(e) => setProjectTrechoText1(e.target.value)} placeholder="Trecho 1 texto"></textarea>
-        </div>
-        <Button type="submit">Adicionar Projeto</Button>
-      </ProjectForm>
+      {editProject && (
+    <ProjectForm onSubmit={(e) => e.preventDefault()}>
+      {Object.entries(editProject).map(([key, value]) => {
+        if (key !== "tabContents") {
+          const isTextArea = typeof value === 'string' && value.length > 50;
+          return (
+            <div key={key}>
+              <label>{key}</label>
+              {isTextArea ? (
+                <textarea
+                  value={value}
+                  onChange={(e) => handleEditChange(key, e.target.value)}
+                />
+              ) : (
+                <input
+                  type="text"
+                  value={value}
+                  onChange={(e) => handleEditChange(key, e.target.value)}
+                />
+              )}
+            </div>
+          );
+        }
+        return null;
+      })}
+
+      {/* Handling nested tabContents with a switch-case structure */}
+      {editProject.tabContents && Object.entries(editProject.tabContents).map(([tabKey, content]) => (
+        <div key={tabKey}>
+          <h5>Tab {tabKey}</h5>
+          {Object.entries(content).map(([fieldKey, fieldValue]) => {
+            let element = null;
+            switch (true) {
+              case fieldKey.toLowerCase().includes('imageUrl'):
+                element = (
+                  <ImageField
+                    key={fieldKey}
+                    label={fieldKey}
+                    imageUrl={fieldValue}
+                    onImageUpload={(newUrl) => handleTabContentChange(tabKey, fieldKey, newUrl)}
+                    storagePath={`tabContents/${editProject.id}/${tabKey}`}
+                  />
+                );
+                break;
+              case typeof fieldValue === 'string' && fieldValue.length > 50:
+                element = (
+                  <div key={fieldKey}>
+                    <label>{fieldKey}</label>
+                    <textarea
+                      value={fieldValue}
+                      onChange={(e) => handleTabContentChange(tabKey, fieldKey, e.target.value)}
+                    />
+                  </div>
+                );
+                break;
+              case fieldKey.toLowerCase().includes('chartdata'):
+                element = (
+                <div key={fieldKey}>
+                <Bar
+                  data={JSON.parse(fieldValue)}
+                  options={{ scales: { yAxes: [{ ticks: { beginAtZero: true } }] } }}
+                />
+
+            </div>
+          );
+          break;
+
+              default:
+                element = (
+                  <div key={fieldKey}>
+                    <label>{fieldKey}</label>
+                    <input
+                      type="text"
+                      value={fieldValue}
+                      onChange={(e) => handleTabContentChange(tabKey, fieldKey, e.target.value)}
+                    />
+                  </div>
+                );
+                break;
+            }
+            return element;
+          })}
+  </div>
+))}
+
+
+    <Button onClick={saveUpdate}>Save Changes</Button>
+  </ProjectForm>
+)}
+
+
       <ProjectList>
         {projects.map(project => (
           <ProjectItem key={project.id}>
-            {editingId === project.id ? (
-              <>
-                <input type="text" value={editName} onChange={(e) => setEditName(e.target.value)} placeholder="New Name" />
-                <textarea value={editDescription} onChange={(e) => setEditDescription(e.target.value)} placeholder="New Description"></textarea>
-                <input type="text" value={editCategory} onChange={(e) => setEditCategory(e.target.value)} placeholder="New Name" />
-                <Button onClick={saveUpdate}>Save</Button>
-              </>
-            ) : (
-              <>
-              <div style={{ margin: '10em 0'}}>
-                <h3>{project.name}</h3>
-                <p>{project.description}</p>
-                <h3>{project.category}</h3>
-                <h3>{project.trechoTitle1}</h3>
-                <p>{parseAndBoldText(project.trechoText1)}</p>
-                <Button onClick={() => { setEditingId(project.id); setEditName(project.name); setEditDescription(project.description); }}>Edit</Button>
-                <Button onClick={() => deleteProject(project.id)}>Delete</Button>
-              </div>
-             
-              </>
-            )}
+            <h3>{project.name}</h3>
+            <p>{project.description}</p>
+            <h3>{project.category}</h3>
+            <div>
+              <h4>Tab Contents:</h4>
+              {Object.entries(project.tabContents || {}).map(([key, content]) => (
+                <div key={key}>
+                  <h5>Tab {key}</h5>
+                  <p>{content.Title1 || 'No Title'}</p>
+                  <p>{content.Text1 || 'No Description'}</p>
+                  <p>{content.additionalInfo1 || 'No Additional Info'}</p>
+                  {content.ImageURL && <img src={content.ImageURL} alt={`Image for ${content.Title1}`} />}
+                  <p>{content.Title2 || 'No Title'}</p>
+                  <p>{content.Text2 || 'No Description'}</p>
+                  <p>{content.additionalInfo2 || 'No Additional Info'}</p>
+                </div>
+              ))}
+            </div>
+            <Button onClick={() => setEditProject({ ...project })}>Edit</Button>
+            <Button onClick={() => deleteProject(project.id)}>Delete</Button>
           </ProjectItem>
         ))}
       </ProjectList>
@@ -218,4 +307,7 @@ function Projetos() {
   );
 }
 
+
 export default Projetos;
+
+

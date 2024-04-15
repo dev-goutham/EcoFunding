@@ -2,11 +2,12 @@
 import styled from "styled-components";
 import Sidebar from "./Sidebar.jsx";
 import MainContent from "./MainContent.jsx";
+import Relatorios from "./Relatorios.jsx";
 function Dashboard() {
   return (
     <Container>
       <Sidebar />
-      
+      <Relatorios />
     </Container>
   );
 }
