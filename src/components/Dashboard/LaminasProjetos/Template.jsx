@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { getFirestore, getDocs, collection } from 'firebase/firestore';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
-
+import Tabs from './Tabs';
 
 const Container = styled.div`
   display: flex;
@@ -370,61 +370,7 @@ export default function Indicators() {
         </Column>
       </FirstSetup>
       <SecondSetup>
-        <Row>
-          <Arrow onClick={() => scrollTabs(-1)}><FaArrowLeft /></Arrow>
-          <Nav>
-            {tabs.slice(visibleTab, visibleTab + 4).map(tab => (
-              <NavItem key={tab}>
-                <NavLink
-                  className={activeTab === tab ? 'active' : ''}
-                  onClick={() => handleTabClick(tab)}
-                >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </NavLink>
-              </NavItem>
-            ))}
-          </Nav>
-          <Arrow onClick={() => scrollTabs(1)}><FaArrowRight /></Arrow>
-          </Row>
-          <Content>
-          {projects.map(project => (
-    Object.entries(project.tabContents || {}).map(([key, content]) => {
-      if (key === activeTab) {
-        return (
-          <div key={key}>
-            <H1>{content.Title1 || 'No Title'}</H1>
-            <P>{content.Text1 || 'No Description'}</P>
-            <P>{content.additionalInfo1 || 'No Additional Info'}</P>
-            {content.ImageURL && <img src={content.ImageURL} alt={`Image for ${content.Title1}`} />}
-
-            {/* Dynamic sheet data rendering based on tab */}
-            {Object.entries(sheetData).map(([dataKey, dataValue]) => (
-                    <React.Fragment key={dataKey}>
-                      <Table>
-                        <thead>
-                          <tr>
-                            {dataValue.length > 0 && Object.keys(dataValue[0]).map(header => <Th key={header}>{header}</Th>)}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {dataValue.map((row, rowIndex) => (
-                            <tr key={rowIndex}>
-                              {Object.values(row).map((value, valueIndex) => <Td key={valueIndex}>{value}</Td>)}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </Table>
-                    </React.Fragment>
-                  ))}
-                  {Object.keys(sheetData).length === 0 && <p>Loading sheet data...</p>}
-                </div>
-              )
-            }
-            return null;
-          }
-        ))}
-        
-</Content>
+        <Tabs avatarUrl={avatarUrl} projects={projects} progress={progress} tabs={tabs} visibleTab={visibleTab} activeTab={activeTab} handleTabClick={handleTabClick} scrollTabs={scrollTabs} sheetData={sheetData} />
       </SecondSetup>
     </Container>
   );
