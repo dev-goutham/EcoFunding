@@ -340,7 +340,7 @@ export default function Indicators() {
   return (
     <Container>
       <FirstSetup>
-        <ImgFirstSetup src={avatarUrl} alt="logo" />
+        <ImgFirstSetup src={"https://placehold.co/600"} alt="logo" />
         <Column>
         <Grid>
   {projects.length > 0 ? (

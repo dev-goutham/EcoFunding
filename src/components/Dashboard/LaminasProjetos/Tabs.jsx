@@ -222,7 +222,7 @@ const CustomProgressBar = styled.progress`
   }
 `;
 
-function Tabs({ avatarUrl, projects, progress, tabs, visibleTab, activeTab, handleTabClick, scrollTabs, sheetData }) {
+function Tabs({  projects, tabs, visibleTab, activeTab, handleTabClick, scrollTabs, sheetData }) {
   return (
     <Container>      
       <SecondSetup>

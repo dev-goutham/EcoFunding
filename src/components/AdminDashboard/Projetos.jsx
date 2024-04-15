@@ -3,11 +3,12 @@ import styled from "styled-components";
 import { firestore } from "../../config/firebase";
 import { collection, getDocs, updateDoc, doc, deleteDoc } from "firebase/firestore";
 import { Bar } from 'react-chartjs-2';
-import ImageField  from "./ImageField";
+import ImageField from "./ImageField";
+import Papa from 'papaparse';
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
-
 
 const Container = styled.div`
   display: flex;
@@ -29,8 +30,8 @@ const ProjectForm = styled.form`
   gap: 10px;
   margin-bottom: 20px;
   width: 30rem;
-  margin: 0 auto; /* Centered the form in the page */
-  input {
+  margin: 0 auto;
+  input, textarea {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -38,12 +39,7 @@ const ProjectForm = styled.form`
     box-sizing: border-box;
   }
   textarea {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 100%;
-    min-height: 24em; /* Adjust as needed */
-    height: 100%; /* Adjust as needed */
+    min-height: 24em;
     box-sizing: border-box;
   }
   h3 {
@@ -58,7 +54,6 @@ const ProjectForm = styled.form`
     color: white;
     cursor: pointer;
     width: 100%;
-  
   }
 `;
 
@@ -66,7 +61,7 @@ const ProjectList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 80%; /* Set a max width for better layout control */
+  width: 80%;
 `;
 
 const ProjectItem = styled.div`
@@ -93,51 +88,112 @@ const Button = styled.button`
   color: white;
 `;
 
+const Nav = styled.ul`
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+`;
+
+const NavItem = styled.li`
+  margin: 0 10px;
+`;
+
+const NavLink = styled.a`
+  color: #5e5e5e;
+  cursor: pointer;
+  padding: 10px;
+  display: block;
+  text-decoration: none;
+  text-transform: uppercase;
+  &:hover {
+    background-color: #f5f5f5;
+    border-radius: 5px;
+  }
+  &.active {
+    color: #000000;
+    box-shadow: 0px 1.5px 0px #2ebc15;
+  }
+`;
+
+const Arrow = styled.button`
+  border: none;
+  background: none;
+  cursor: pointer;
+`;
+
 function Projetos() {
   const [projects, setProjects] = useState([]);
   const [editProject, setEditProject] = useState(null);
-  const [chartData, setChartData] = useState({
-    labels: [],
-    datasets: [{
-      label: 'Project Data',
-      data: [],
-      backgroundColor: 'rgba(54, 162, 235, 0.2)',
-      borderColor: 'rgba(54, 162, 235, 1)',
-      borderWidth: 1,
-    }],
-  });
+  const [activeTab, setActiveTab] = useState('');
+  const [visibleTab, setVisibleTab] = useState(0);
+  const [tabs, setTabs] = useState([]);
+  const [csvData, setCsvData] = useState({});
+  const [selectedProjectId, setSelectedProjectId] = useState(null); // New state for tracking selected project
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      const querySnapshot = await getDocs(collection(firestore, "projects"));
-      const projectsData = await Promise.all(querySnapshot.docs.map(async doc => {
-        const project = { ...doc.data(), id: doc.id };
-        const tabContentsSnapshot = await getDocs(collection(firestore, `projects/${doc.id}/tabContents`));
-        project.tabContents = tabContentsSnapshot.docs.reduce((acc, doc) => ({
-          ...acc,
-          [doc.id]: doc.data()
-        }), {});
-        return project;
-      }));
-      setProjects(projectsData);
-    };
     fetchProjects();
   }, []);
-  const deleteProject = useCallback(async (projectId) => {
-    const projectDocRef = doc(firestore, "projects", projectId);
-    try {
-      await deleteDoc(projectDocRef);
-      setProjects(currentProjects => currentProjects.filter(project => project.id !== projectId));
-    } catch (error) {
-      console.error("Failed to delete project:", error);
-    }
-  }, []);
 
-  const handleEditChange = (field, value) => {
-    setEditProject(prev => ({ ...prev, [field]: value }));
+  const fetchProjects = async () => {
+    const querySnapshot = await getDocs(collection(firestore, "projects"));
+    const projectsData = await Promise.all(querySnapshot.docs.map(async doc => {
+      const project = { ...doc.data(), id: doc.id };
+      const tabContentsSnapshot = await getDocs(collection(firestore, `projects/${doc.id}/tabContents`));
+      project.tabContents = tabContentsSnapshot.docs.reduce((acc, doc) => ({
+        ...acc,
+        [doc.id]: doc.data()
+      }), {});
+      return project;
+    }));
+    setProjects(projectsData);
+    setSelectedProjectId(projectsData[0]?.id);
+    const uniqueTabs = new Set(projectsData.flatMap(p => Object.keys(p.tabContents || {})));
+    setTabs([...uniqueTabs]);
+    if (uniqueTabs.size > 0) setActiveTab([...uniqueTabs][0]);
+  };
+const selectProject = (projectId) => {
+    setSelectedProjectId(projectId);
+  };
+  const fetchDataFromCsvUrl = async (url, key) => {
+    try {
+      const response = await fetch(url);
+      const csvText = await response.text();
+      Papa.parse(csvText, {
+        header: true,
+        complete: (results) => {
+          setCsvData(prevData => ({
+            ...prevData,
+            [key]: results.data
+          }));
+        }
+      });
+    } catch (error) {
+      console.error("Error fetching or parsing CSV:", error);
+    }
   };
 
-  const handleTabContentChange = (tab, field, value) => {
+  const handleTabClick = useCallback((tab) => {
+    setActiveTab(tab);
+  }, []);
+
+  const scrollTabs = useCallback((direction) => {
+    setVisibleTab(prev => {
+      const newValue = prev + direction;
+      return (newValue >= 0 && newValue < tabs.length) ? newValue : prev;
+    });
+  }, [tabs.length]);
+
+  const deleteProject = useCallback(async (projectId) => {
+    await deleteDoc(doc(firestore, "projects", projectId));
+    setProjects(currentProjects => currentProjects.filter(project => project.id !== projectId));
+  }, []);
+
+  const handleEditChange = useCallback((field, value) => {
+    setEditProject(prev => ({ ...prev, [field]: value }));
+  }, []);
+
+  const handleTabContentChange = useCallback((tab, field, value) => {
     setEditProject(prev => ({
       ...prev,
       tabContents: {
@@ -148,166 +204,109 @@ function Projetos() {
         }
       }
     }));
-  };
-  const updateChartData = (projects) => {
-    const labels = projects.map(p => p.name);
-    const data = projects.map(p => p.value);  // Ensure 'value' is a numeric field in Firestore
+  }, []);
 
-    setChartData({
-      labels,
-      datasets: [{
-        label: 'Project Values',
-        data,
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 1
-      }]
-    });
-  };
-  const saveUpdate = async () => {
+  const saveUpdate = useCallback(async () => {
     if (!editProject) return;
-
     const projectDocRef = doc(firestore, "projects", editProject.id);
     await updateDoc(projectDocRef, {
       name: editProject.name,
       description: editProject.description,
       category: editProject.category,
     });
-
     Object.entries(editProject.tabContents).forEach(async ([key, value]) => {
       const tabContentDocRef = doc(firestore, `projects/${editProject.id}/tabContents`, key);
       await updateDoc(tabContentDocRef, value);
     });
-
     setProjects(prevProjects => prevProjects.map(project => project.id === editProject.id ? { ...project, ...editProject } : project));
-    setEditProject(null); // Exit edit mode
-  };
+    setEditProject(null);
+  }, [editProject]);
 
   return (
     <Container>
       <h1>Projetos</h1>
       {editProject && (
-    <ProjectForm onSubmit={(e) => e.preventDefault()}>
-      {Object.entries(editProject).map(([key, value]) => {
-        if (key !== "tabContents") {
-          const isTextArea = typeof value === 'string' && value.length > 50;
-          return (
+        <ProjectForm onSubmit={(e) => e.preventDefault()}>
+          {Object.entries(editProject).map(([key, value]) => (
             <div key={key}>
               <label>{key}</label>
-              {isTextArea ? (
-                <textarea
-                  value={value}
-                  onChange={(e) => handleEditChange(key, e.target.value)}
-                />
+              {typeof value === 'string' && value.length > 50 ? (
+                <textarea value={value} onChange={(e) => handleEditChange(key, e.target.value)} />
               ) : (
-                <input
-                  type="text"
-                  value={value}
-                  onChange={(e) => handleEditChange(key, e.target.value)}
-                />
+                <input type="text" value={value} onChange={(e) => handleEditChange(key, e.target.value)} />
               )}
             </div>
-          );
-        }
-        return null;
-      })}
-
-      {/* Handling nested tabContents with a switch-case structure */}
-      {editProject.tabContents && Object.entries(editProject.tabContents).map(([tabKey, content]) => (
-        <div key={tabKey}>
-          <h5>Tab {tabKey}</h5>
-          {Object.entries(content).map(([fieldKey, fieldValue]) => {
-            let element = null;
-            switch (true) {
-              case fieldKey.toLowerCase().includes('imageUrl'):
-                element = (
-                  <ImageField
-                    key={fieldKey}
-                    label={fieldKey}
-                    imageUrl={fieldValue}
-                    onImageUpload={(newUrl) => handleTabContentChange(tabKey, fieldKey, newUrl)}
-                    storagePath={`tabContents/${editProject.id}/${tabKey}`}
-                  />
-                );
-                break;
-              case typeof fieldValue === 'string' && fieldValue.length > 50:
-                element = (
-                  <div key={fieldKey}>
-                    <label>{fieldKey}</label>
-                    <textarea
-                      value={fieldValue}
-                      onChange={(e) => handleTabContentChange(tabKey, fieldKey, e.target.value)}
-                    />
-                  </div>
-                );
-                break;
-              case fieldKey.toLowerCase().includes('chartdata'):
-                element = (
-                <div key={fieldKey}>
-                <Bar
-                  data={JSON.parse(fieldValue)}
-                  options={{ scales: { yAxes: [{ ticks: { beginAtZero: true } }] } }}
-                />
-
+          ))}
+          {editProject.tabContents && Object.entries(editProject.tabContents).map(([tabKey, content]) => (
+            <div key={tabKey}>
+              <h5>Tab {tabKey}</h5>
+              {Object.entries(content).map(([fieldKey, fieldValue]) => {
+                let element = null;
+                switch (true) {
+                  case fieldKey.toLowerCase().includes('imageUrl'):
+                    element = (
+                      <ImageField key={fieldKey} label={fieldKey} imageUrl={fieldValue}
+                        onImageUpload={(newUrl) => handleTabContentChange(tabKey, fieldKey, newUrl)}
+                        storagePath={`tabContents/${editProject.id}/${tabKey}`} />
+                    );
+                    break;
+                  case typeof fieldValue === 'string' && fieldValue.length > 50:
+                    element = (
+                      <textarea key={fieldKey} value={fieldValue} onChange={(e) => handleTabContentChange(tabKey, fieldKey, e.target.value)} />
+                    );
+                    break;
+                  case fieldKey.toLowerCase().includes('sheetData'):
+                    element = (
+                      <Bar key={fieldKey} data={JSON.parse(fieldValue)} options={{ scales: { yAxes: [{ ticks: { beginAtZero: true } }] } }} />
+                    );
+                    break;
+                  default:
+                    element = (
+                      <input key={fieldKey} type="text" value={fieldValue} onChange={(e) => handleTabContentChange(tabKey, fieldKey, e.target.value)} />
+                    );
+                    break;
+                }
+                return element;
+              })}
             </div>
-          );
-          break;
-
-              default:
-                element = (
-                  <div key={fieldKey}>
-                    <label>{fieldKey}</label>
-                    <input
-                      type="text"
-                      value={fieldValue}
-                      onChange={(e) => handleTabContentChange(tabKey, fieldKey, e.target.value)}
-                    />
-                  </div>
-                );
-                break;
-            }
-            return element;
-          })}
-  </div>
-))}
-
-
-    <Button onClick={saveUpdate}>Save Changes</Button>
-  </ProjectForm>
-)}
-
-
-      <ProjectList>
-        {projects.map(project => (
-          <ProjectItem key={project.id}>
-            <h3>{project.name}</h3>
-            <p>{project.description}</p>
-            <h3>{project.category}</h3>
-            <div>
-              <h4>Tab Contents:</h4>
-              {Object.entries(project.tabContents || {}).map(([key, content]) => (
-                <div key={key}>
-                  <h5>Tab {key}</h5>
-                  <p>{content.Title1 || 'No Title'}</p>
-                  <p>{content.Text1 || 'No Description'}</p>
-                  <p>{content.additionalInfo1 || 'No Additional Info'}</p>
-                  {content.ImageURL && <img src={content.ImageURL} alt={`Image for ${content.Title1}`} />}
-                  <p>{content.Title2 || 'No Title'}</p>
-                  <p>{content.Text2 || 'No Description'}</p>
-                  <p>{content.additionalInfo2 || 'No Additional Info'}</p>
-                </div>
-              ))}
-            </div>
-            <Button onClick={() => setEditProject({ ...project })}>Edit</Button>
-            <Button onClick={() => deleteProject(project.id)}>Delete</Button>
-          </ProjectItem>
+          ))}
+          <Button onClick={saveUpdate}>Save Changes</Button>
+        </ProjectForm>
+      )}
+      <Nav>
+        <Arrow onClick={() => scrollTabs(-1)}><FaArrowLeft /></Arrow>
+        {tabs.slice(visibleTab, visibleTab + 4).map(tab => (
+          <NavItem key={tab}>
+            <NavLink className={activeTab === tab ? 'active' : ''} onClick={() => handleTabClick(tab)}>{tab}</NavLink>
+          </NavItem>
         ))}
+        <Arrow onClick={() => scrollTabs(1)}><FaArrowRight /></Arrow>
+      </Nav>
+      <ProjectList>
+      {projects.map(project => {
+          if (project.id === selectedProjectId) {
+            return (
+              <ProjectItem key={project.id}>
+                <h3>{project.name}</h3>
+                <p>{project.description}</p>
+                {project.tabContents && project.tabContents[activeTab] && (
+                  <div>
+                    <h4>{project.tabContents[activeTab].Title1 || 'No Title'}</h4>
+                    <p>{project.tabContents[activeTab].Text1 || 'No Description'}</p>
+                    {project.tabContents[activeTab].ImageURL && (
+                      <img src={project.tabContents[activeTab].ImageURL} alt={`Image for ${project.tabContents[activeTab].Title1}`} />
+                    )}
+                  </div>
+                )}
+                <Button onClick={() => selectProject(project.id)}>View</Button>
+                <Button onClick={() => deleteProject(project.id)}>Delete</Button>
+              </ProjectItem>
+            );
+          }
+          return null;
+        })}
       </ProjectList>
     </Container>
   );
 }
-
-
 export default Projetos;
-
-
