@@ -223,6 +223,8 @@ const CustomProgressBar = styled.progress`
 `;
 
 function Tabs({  projects, tabs, visibleTab, activeTab, handleTabClick, scrollTabs, sheetData }) {
+  console.log(projects)
+  console.log(sheetData, 'sheetData')
   return (
     <Container>      
       <SecondSetup>

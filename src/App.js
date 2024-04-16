@@ -36,6 +36,7 @@ import TemplateLamina from './components/Dashboard/LaminasProjetos/Template.jsx'
 
 
 function App() {
+  
   return (
    
     <div>
@@ -60,7 +61,7 @@ function App() {
         <Route path="/dashboard/relatorios" element={<ProtectedRoute>
           <PainelRelatorios />
         </ProtectedRoute>} />
-        <Route path="/projetos/PainelSolarTeste" element={<ProtectedRoute>
+        <Route path="/projetos/:projectid" element={<ProtectedRoute>
           <TemplateLamina />
         </ProtectedRoute>} />
        

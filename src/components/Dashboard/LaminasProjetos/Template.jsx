@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { getFirestore, getDocs, collection } from 'firebase/firestore';
+import { doc, getDoc } from "firebase/firestore";
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import Tabs from './Tabs';
+import { useParams } from 'react-router-dom';
+import { Height } from '@mui/icons-material';
 
 const Container = styled.div`
   display: flex;
@@ -207,6 +210,7 @@ const GridItem = styled.div`
   margin-bottom: 20px;  // Space between rows
 `;
 
+
 const CustomProgressBar = styled.progress`
   width: 100%;
   height: 20px;
@@ -224,15 +228,61 @@ const CustomProgressBar = styled.progress`
     border-radius: 10px;
   }
 `;
+const Embed = styled.iframe`
+  width: 100%;
+  height: auto;
+  min-height: 400px;
 
+`
 
 export default function Indicators() {
+  const {projectid} = useParams();
   const [projects, setProjects] = useState([]);
+  const [project, setProject] = useState();
   const [tabs, setTabs] = useState([]);
-  const [activeTab, setActiveTab] = useState('');
+  const [activeTab, setActiveTab] = useState('operacao');
   const [visibleTab, setVisibleTab] = useState(0);
   const [sheetData, setSheetData] = useState({});
   const [avatarUrl, setAvatarUrl] = useState('');
+  const [selectedProject, setSelectedProject] = useState('PainelSolarTeste')
+  
+  useEffect(() => {
+    const fetchProject = async () => {
+      const docRef = doc(db, "projects", projectid);
+      const docSnap = await getDoc(docRef);
+      
+      if (docSnap.exists()) {
+        setProject(docSnap.data());
+        console.log("Document data:", docSnap.data());
+      } else {
+        console.log("No such document!");
+      }
+    };
+  
+    fetchProject();
+  }, [projectid]);
+  
+  useEffect(() => {
+    const fetchProject = async () => {
+      const parentDocRef = doc(db, 'projects', projectid);  // Ensure projectId is defined
+      const subCollectionRef = collection(parentDocRef, 'tabContents');
+      const specificDocRef = doc(subCollectionRef, activeTab);  // Ensure activeTab is a valid document ID
+      
+      const specificDocSnapshot = await getDoc(specificDocRef);
+      if (specificDocSnapshot.exists()) {
+        console.log(specificDocSnapshot.id, " => ", specificDocSnapshot.data());
+        setSheetData(specificDocSnapshot.data())
+        
+      } else {
+        console.log('No such document!');
+         
+      }
+    };
+  
+    fetchProject();
+  }, [projectid, activeTab]);  // Ensure dependencies are correctly listed
+  
+  
 
   const [progress, setProgress] = useState(50);  // Example progress state
   const db = getFirestore();
@@ -322,7 +372,10 @@ export default function Indicators() {
 
     return data;
 }
+  
+ 
 
+  
     
 
   const handleTabClick = (tab) => {
@@ -336,41 +389,33 @@ export default function Indicators() {
     });
   };
   
-
+  const data  = [
+    {icon:project?.icon1,text:project?.text1},
+    {icon:project?.icon2,text:project?.text2},
+    {icon:project?.icon3,text:project?.text3},
+   ]
   return (
     <Container>
       <FirstSetup>
         <ImgFirstSetup src={"https://placehold.co/600"} alt="logo" />
         <Column>
-        <Grid>
-  {projects.length > 0 ? (
-    projects.map((project, projectIndex) => (
-      <React.Fragment key={project.id}>
-        {project.texts.map((text, index) => (
-          <GridItem key={`${projectIndex}-${index}`}>
-            {project.icons[index] ? (
-              <img src={project.icons[index]} alt={`Icon ${index + 1}`} style={{ width: '100px', height: '100px' }} />
-            ) : (
-              <p>No Icon Available</p>
-            )}
-            <P>{text}</P>
-          </GridItem>
-        ))}
-      </React.Fragment>
-    ))
-  ) : (
-    <p>Loading projects...</p>
-  )}
-</Grid>
-
-
+            <Grid>
+            {data.map((item, index) => (
+              <GridItem key={index}>
+                  <img src={item.icon} alt="logo" />
+                  <p>{item.text}</p>
+              </GridItem>
+            ))}
+            </Grid>
 
           <Button onClick={() => console.log('Invest action')}>Investir</Button>
           <CustomProgressBar value={progress} max="100">Loading...</CustomProgressBar>
         </Column>
       </FirstSetup>
       <SecondSetup>
-        <Tabs avatarUrl={avatarUrl} projects={projects} progress={progress} tabs={tabs} visibleTab={visibleTab} activeTab={activeTab} handleTabClick={handleTabClick} scrollTabs={scrollTabs} sheetData={sheetData} />
+        
+     <Embed src={sheetData.sheetData1}></Embed>
+     
       </SecondSetup>
     </Container>
   );

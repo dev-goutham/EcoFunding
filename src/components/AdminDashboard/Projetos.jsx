@@ -296,9 +296,11 @@ const selectProject = (projectId) => {
                     {project.tabContents[activeTab].ImageURL && (
                       <img src={project.tabContents[activeTab].ImageURL} alt={`Image for ${project.tabContents[activeTab].Title1}`} />
                     )}
+                   
+
                   </div>
                 )}
-                <Button onClick={() => selectProject(project.id)}>View</Button>
+                <Button onClick={() => editProject({ ...project })}>View</Button>
                 <Button onClick={() => deleteProject(project.id)}>Delete</Button>
               </ProjectItem>
             );
