@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Sidebar from "./Sidebar.jsx";
-import Projetos from "./Projetos.jsx";
+import Projetos from "./ProjetosLegacy.jsx";
 
 function AdminForm() {
   return (

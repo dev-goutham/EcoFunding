@@ -229,11 +229,14 @@ const CustomProgressBar = styled.progress`
   }
 `;
 const Embed = styled.iframe`
-  width: 100%;
-  height: auto;
-  min-height: 400px;
-
-`
+  height: auto !important;      // Adjusts height automatically to the content
+  width: 90%;     // Allows the iframe to grow to fill the remaining space
+  margin: 0;
+  padding: 0 !important;
+  border: none;      // Removes border to integrate seamlessly
+  display: block;
+  
+`;
 
 export default function Indicators() {
   const {projectid} = useParams();
@@ -243,9 +246,15 @@ export default function Indicators() {
   const [activeTab, setActiveTab] = useState('operacao');
   const [visibleTab, setVisibleTab] = useState(0);
   const [sheetData, setSheetData] = useState({});
-  const [avatarUrl, setAvatarUrl] = useState('');
+  const [Title, setTitle] = useState([]);
+  const [Text, setText] = useState([]);
+  const [additionalInfo, setAdditionalInfo] = useState([]);
+  const [ImageUrl, setImageUrl] = useState([]);
   const [selectedProject, setSelectedProject] = useState('PainelSolarTeste')
-  
+  const [progress, setProgress] = useState(50);  // Example progress state
+  const db = getFirestore();
+  console.log('imageUrl:', project?.tabContents?.ImageUrl);
+
   useEffect(() => {
     const fetchProject = async () => {
       const docRef = doc(db, "projects", projectid);
@@ -264,10 +273,14 @@ export default function Indicators() {
   
   useEffect(() => {
     const fetchProject = async () => {
+      if(!projectid || !activeTab) {
+        console.error('Project ID or active tab not defined')
+      }
+
       const parentDocRef = doc(db, 'projects', projectid);  // Ensure projectId is defined
       const subCollectionRef = collection(parentDocRef, 'tabContents');
       const specificDocRef = doc(subCollectionRef, activeTab);  // Ensure activeTab is a valid document ID
-      
+      try {
       const specificDocSnapshot = await getDoc(specificDocRef);
       if (specificDocSnapshot.exists()) {
         console.log(specificDocSnapshot.id, " => ", specificDocSnapshot.data());
@@ -277,17 +290,35 @@ export default function Indicators() {
         console.log('No such document!');
          
       }
-    };
+    } catch (error) {
+      console.error('Error fetching document:', error);
+    }
+  };
   
     fetchProject();
   }, [projectid, activeTab]);  // Ensure dependencies are correctly listed
   
   
 
-  const [progress, setProgress] = useState(50);  // Example progress state
-  const db = getFirestore();
-
  
+
+  useEffect(() => {
+    if (project) {
+      const subCollectionRef = collection(db, `projects/${projectid}/tabContents`);
+      const specificDocRef = doc(subCollectionRef, activeTab);
+      
+      const fetchTabData = async () => {
+        const docSnap = await getDoc(specificDocRef);
+        if (docSnap.exists()) {
+          setSheetData(docSnap.data());
+        } else {
+          console.log('No such document!');
+        }
+      };
+
+      fetchTabData();
+    }
+  }, [projectid, activeTab, project, db]);
   useEffect(() => {
     const fetchProjects = async () => {
       const querySnapshot = await getDocs(collection(db, "projects"));
@@ -352,6 +383,42 @@ export default function Indicators() {
     fetchSheetData();
   }, [activeTab, projects]);
   
+  useEffect(() => {
+    if (projects.length > 0 && activeTab) {
+      const activeProject = projects.find(p => p.id === projectid); // find the active project by id
+      if (activeProject && activeProject.tabContents[activeTab]) {
+        const tabContent = activeProject.tabContents[activeTab];
+
+        // Handle Title1
+        if (tabContent.Title1) {
+          const title1 = tabContent.Title1.toString();
+          setTitle(title1); // assuming setTitle is meant to hold the title for display
+          console.log("Title:", title1);
+        }
+
+        // Handle Text1
+        if (tabContent.Text1) {
+          const text1 = tabContent.Text1.toString();
+          setText(text1); // assuming setText is meant to hold the text for display
+          console.log("Text:", text1);
+        }
+
+        // Handle AdditionalInfo
+        if (tabContent.AdditionalInfo) {
+          const additionalInfo = tabContent.AdditionalInfo.toString();
+          setAdditionalInfo(additionalInfo); // assuming setAdditionalInfo is meant to hold the additional info for display
+          console.log("Additional Info:", additionalInfo);
+        }
+        if (tabContent.ImageUrl) {
+          const imageUrl = tabContent.ImageUrl.toString();
+          setImageUrl(imageUrl); // assuming setAvatarUrl is meant to hold the avatar url for display
+          console.log("Avatar Url:", imageUrl);
+      }
+    }
+    }
+  }, [activeTab, projects, projectid]);
+
+ 
 
   function parseCSV(csvText) {
     // Split the text into an array of lines
@@ -413,8 +480,29 @@ export default function Indicators() {
         </Column>
       </FirstSetup>
       <SecondSetup>
+      <Row>
+          <Arrow onClick={() => scrollTabs(-1)}><FaArrowLeft /></Arrow>
+          <Nav>
+            {tabs.slice(visibleTab, visibleTab + 4).map(tab => (
+              <NavItem key={tab}>
+                <NavLink
+                  className={activeTab === tab ? 'active' : ''}
+                  onClick={() => handleTabClick(tab)}
+                >
+                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                </NavLink>
+              </NavItem>
+            ))}
+          </Nav>
+          <Arrow onClick={() => scrollTabs(1)}><FaArrowRight /></Arrow>
+        </Row>
         
-     <Embed src={sheetData.sheetData1}></Embed>
+        <H1>{Title}</H1>
+        <P>{Text}</P>
+        <P>{additionalInfo}</P>
+       
+        
+        {sheetData?.sheetData1 && (<Embed frameborder="0" src={sheetData.sheetData1}></Embed>)}
      
       </SecondSetup>
     </Container>

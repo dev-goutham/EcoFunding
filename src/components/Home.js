@@ -309,7 +309,7 @@ const Home = ({ imgurl, altText, title, paragraph, button, transform }) => {
   // Function to render title with conditional line breaks
   const renderTitle = (title) => {
     // Define the substring to break the line before, case-insensitive
-    const breakBefore = "eco-sustentável";
+    const breakBefore = "Ecosustentável";
     const breakBeforeRegex = new RegExp(`(${breakBefore})`, 'i'); // 'i' flag for case-insensitive
     const match = title.match(breakBeforeRegex);
   
@@ -324,14 +324,14 @@ const Home = ({ imgurl, altText, title, paragraph, button, transform }) => {
         </>
       );
     }
-    return title; // No specific break point found, return the title as is
+    return title; 
   };
  
   return (
     <Wrapper>
       <Container>
         <FrameText>
-          <H11>{renderTitle(title)}</H11>
+          <H11 dangerouslySetInnerHTML={{ __html: title }}></H11>
           <Paragraph1>{paragraph}</Paragraph1>
           <Button1 buttonText={button}>{button}</Button1>
         </FrameText>
@@ -358,7 +358,7 @@ const slidesData = [
     key: 'slide2',
     src: HomeSection3,
     alt: 'Seja um investidor eco-sustentável',
-    title: `Torne-se um investidor EcoSustentável`,
+    title: `Torne-se um investidor <span style="color: #2ebc15"> Eco</span>Sustentável`,
     paragraph: 'Transforme seu débito em crédito ambiental.',
     button: 'CADASTRE-SE'
     
@@ -367,7 +367,7 @@ const slidesData = [
     key: 'slide2',
     src: HomeSection2,
     alt: 'Another image description',
-    title: `Torne-se um parceiro Ecosustentável`,
+    title: `Torne-se um parceiro <span style="color: #2ebc15">Eco</span>sustentável`,
     paragraph: 'Analisamos a viabilidade de seu projeto.',
     button: 'CADASTRE-SE'
   },
