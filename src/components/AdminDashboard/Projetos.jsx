@@ -359,24 +359,37 @@ const [projects, setProjects] = useState([]);
         return;
     }
 
-    const { projectId, contentId, field } = currentEditContent;
-    const project = projects.find(p => p.id === projectId);
-    const tab = project?.tabContents.find(t => t.id === contentId);
+    const { type, projectId, contentId, field } = currentEditContent;
 
-    if (!project || !tab) {
-        console.error("Project or Tab not found", { projectId, contentId });
-        return;
-    }
-
-    const tabDocRef = doc(db, `projects/${projectId}/tabContents/${contentId}`);
-    try {
-        await updateDoc(tabDocRef, { [field]: tab[field] });
-        setIsEditing(false);
-        setCurrentEditContent(null);
-    } catch (error) {
-        console.error("Failed to save changes:", error);
+    if (type === 'project') {
+        // Save changes to project
+        try {
+            const projectDocRef = doc(db, `projects/${projectId}`);
+            await updateDoc(projectDocRef, { [field]: projects.find(p => p.id === projectId)[field] });
+            setIsEditing(false);
+            setCurrentEditContent(null);
+            console.log("Project changes saved.");
+        } catch (error) {
+            console.error("Failed to save project changes:", error);
+        }
+    } else if (type === 'tabContent') {
+        // Save changes to tabContents
+        try {
+            const tabDocRef = doc(db, `projects/${projectId}/tabContents/${contentId}`);
+            await updateDoc(tabDocRef, { [field]: projects.find(p => p.id === projectId).tabContents.find(c => c.id === contentId)[field] });
+            setIsEditing(false);
+            setCurrentEditContent(null);
+            console.log("Tab content changes saved.");
+        } catch (error) {
+            console.error("Failed to save tab content changes:", error);
+        }
+    } else {
+        console.error("Invalid content type:", type);
     }
 }, [currentEditContent, projects]);
+
+
+
 
   
 // When setting active tabs, ensure the logic matches how you store and retrieve these indices
