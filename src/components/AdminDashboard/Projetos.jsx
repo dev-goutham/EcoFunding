@@ -120,7 +120,7 @@ const Project = ({
     const getInputType = (fieldName) => {
         if (fieldName.toLowerCase().includes('text')) {
             return 'text';
-        } else if (fieldName.toLowerCase().includes('avatarUrl')) {
+        } else if (fieldName.toLowerCase().includes('avatar Url')) {
             return 'image';
         } else if (fieldName.toLowerCase().endsWith('s')) { // Simple heuristic to guess array fields
             return 'array';
@@ -133,40 +133,41 @@ const Project = ({
         <ProjectList>
     <h2 onClick={() => handleEditToggle('project', project.id, null, 'name')}>{project.name}</h2>
     {Object.keys(project).filter(key => key !== 'tabContents' && key !== 'id' && key !== 'projectId').map((field) => {
-        const inputType = getInputType(field);
-        return (
-            <div key={field}>
-                <strong>{field.replace(/([A-Z])/g, ' $1').trim()}: </strong>
-                {isEditing && currentEditContent.field === field ? (
-                    inputType === 'text' ? (
-                        <ReactQuill 
-                            value={project[field]}
-                            onChange={(content) => handleContentChange(content, project.id, field)}
-                        />
-                    ) : inputType === 'image' ? (
-                        <input 
-                            type="file"
-                            onChange={(e) => handleImageUpload(e, project.id, field)}
-                        />
-                    ) : inputType === 'array' ? (
-                        <ArrayEditor 
-                            arrayData={project[field]}
-                            onArrayChange={(newArray) => handleContentChange(newArray, project.id, field)}
-                        />
-                    ) : (
-                        <ReactQuill 
-                            value={project[field]}
-                            onChange={(content) => handleContentChange(content, project.id, field)}
-                        />
-                    )
+    const inputType = getInputType(field);
+    return (
+        <div key={field}>
+            <strong>{field.replace(/([A-Z])/g, ' $1').trim()}: </strong>
+            {isEditing && currentEditContent.field === field ? (
+                inputType === 'text' ? (
+                    <ReactQuill 
+                        value={project[field]}
+                        onChange={(content) => handleContentChange(content, project.id, null, field)} // Ensure `contentId` is null if not applicable
+                    />
+                ) : inputType === 'image' ? (
+                    <input 
+                        type="file"
+                        onChange={(e) => handleImageUpload(e, project.id, field)}
+                    />
+                ) : inputType === 'array' ? (
+                    <ArrayEditor 
+                        arrayData={project[field]}
+                        onArrayChange={(newArray) => handleContentChange(newArray, project.id, null, field)} // Ensure `contentId` is null if not applicable
+                    />
                 ) : (
-                    <p onClick={() => handleEditToggle('project', project.id, null, field)} 
-                       dangerouslySetInnerHTML={{ __html: project[field] }}>
-                    </p>
-                )}
-            </div>
-        );
-    })}
+                  <input 
+                  type={inputType}
+                  value={project[field]}
+                  onChange={(e) => handleContentChange(e.target.value, project.id, null, field)} // Ensure `contentId` is null if not applicable
+                  />
+                )
+            ) : (
+                <p onClick={() => handleEditToggle('project', project.id, null, field)}
+                   dangerouslySetInnerHTML={{ __html: project[field] }}>
+                </p>
+            )}
+        </div>
+    );
+})}
     <Button onClick={() => handleSaveChanges(project.id)}>Save</Button>
     <Nav>
         {project.tabContents.map((tab, index) => (
@@ -276,8 +277,8 @@ const Arrow = styled.button`
 
 
 const Projetos = () => {
-const [projects, setProjects] = useState([]);
-  const [activeTab, setActiveTab] = useState(0);
+  const [projects, setProjects] = useState([]);
+  const [activeTab, setActiveTab] = useState({ projectIndex: 0, tabIndex: 0 });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -295,7 +296,7 @@ const [projects, setProjects] = useState([]);
             tabContents: tabContentsSnapshot.docs.map(doc => ({
               ...doc.data(),
               id: doc.id,
-              projectId: docSnapshot.id  // Ensuring this is set correctly
+              projectId: docSnapshot.id
             }))
           };
         }));
@@ -307,139 +308,83 @@ const [projects, setProjects] = useState([]);
         setLoading(false);
       }
     };
-    
 
     fetchProjects();
   }, []);
-  const handleImageUpload = async (event, projectId, field) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const storageRef = db.storage().ref();
-    const fileRef = storageRef.child(`images/${projectId}/${field}/${file.name}`);
-    await fileRef.put(file);
-    const fileUrl = await fileRef.getDownloadURL();
-
-    // Save the URL to Firestore
-    handleContentChange(fileUrl, projectId, field);
-};
 
   const handleEditToggle = useCallback((type, projectId, contentId, field) => {
-    const isCurrent = currentEditContent && currentEditContent.projectId === projectId && currentEditContent.contentId === contentId && currentEditContent.field === field;
-    if (isEditing && isCurrent) {
-      setIsEditing(false);
-      setCurrentEditContent(null);
-    } else {
-      setIsEditing(true);
-      setCurrentEditContent({ type, projectId, contentId, field });
-    }
-  }, [isEditing, currentEditContent]);
-  
-  
-  const handleContentChange = useCallback((content, id, field) => {
-    if (currentEditContent && id === currentEditContent.contentId && field === currentEditContent.field) {
-      setProjects(prevProjects =>
-        prevProjects.map(project =>
-          project.id === currentEditContent.projectId ? {
+    setIsEditing(prev => !prev);
+    setCurrentEditContent(prev => prev && prev.projectId === projectId && prev.contentId === contentId && prev.field === field ? null : { type, projectId, contentId, field });
+  }, []);
+
+  const handleContentChange = useCallback((content, projectId, contentId, field) => {
+    console.log("handleContentChange called", {content, projectId, contentId, field});
+    setProjects(prev => prev.map(project => {
+      if (project.id === projectId) {
+        // Check if the update is for tabContents
+        if (contentId) {
+          return {
             ...project,
-            tabContents: project.tabContents.map(tab =>
-              tab.id === id ? { ...tab, [field]: content } : tab
-            )
-          } : project
-        )
-      );
-    }
-  }, [currentEditContent, projects]);
-
+            tabContents: project.tabContents.map(tab => tab.id === contentId ? { ...tab, [field]: content } : tab)
+          };
+        }
+        // Else update the project's direct field
+        return { ...project, [field]: content };
+      }
+      return project;
+    }));
+  }, []);
   
+
   const handleSaveChanges = useCallback(async () => {
-    console.log("Save Changes Function Triggered");
-    if (!currentEditContent) {
-        console.error("No content selected for saving.");
-        return;
-    }
-
-    const { type, projectId, contentId, field } = currentEditContent;
-
-    if (type === 'project') {
-        // Save changes to project
-        try {
-            const projectDocRef = doc(db, `projects/${projectId}`);
-            await updateDoc(projectDocRef, { [field]: projects.find(p => p.id === projectId)[field] });
-            setIsEditing(false);
-            setCurrentEditContent(null);
-            console.log("Project changes saved.");
-        } catch (error) {
-            console.error("Failed to save project changes:", error);
-        }
-    } else if (type === 'tabContent') {
-        // Save changes to tabContents
-        try {
-            const tabDocRef = doc(db, `projects/${projectId}/tabContents/${contentId}`);
-            await updateDoc(tabDocRef, { [field]: projects.find(p => p.id === projectId).tabContents.find(c => c.id === contentId)[field] });
-            setIsEditing(false);
-            setCurrentEditContent(null);
-            console.log("Tab content changes saved.");
-        } catch (error) {
-            console.error("Failed to save tab content changes:", error);
-        }
-    } else {
-        console.error("Invalid content type:", type);
-    }
-}, [currentEditContent, projects]);
-
-
-
-
-  
-// When setting active tabs, ensure the logic matches how you store and retrieve these indices
-const handleTabClick = (projectIndex, tabIndex) => {
-  setActiveTab({ projectIndex, tabIndex });
-}
-
-  const saveChanges = async () => {
+    setTimeout(() => {
+      console.log("handleContentChange called", {content, projectId, contentId, field});
+    }, 15000);
     if (!currentEditContent) {
       console.error("No content selected for saving.");
       return;
     }
-
+  
+    const { type, projectId, contentId, field } = currentEditContent;
+    const project = projects.find(p => p.id === projectId);
+    const content = type === 'tabContent' ? project?.tabContents.find(c => c.id === contentId)?.[field] : project?.[field];
+  
+    if (!content) {
+      console.error("No updated content available to save.");
+      return;
+    }
+  
+    const docRef = doc(db, type === 'tabContent' ? `projects/${projectId}/tabContents/${contentId}` : `projects/${projectId}`);
     try {
-      const { projectId, contentId } = currentEditContent;
-      const tabDocRef = doc(db, `projects/${currentEditContent.projectId}/tabContents/${currentEditContent.contentId}`);
-      await updateDoc(tabDocRef, { description: projects.find(p => p.id === projectId).tabContents.find(c => c.id === contentId).description });
+      await updateDoc(docRef, { [field]: content });
+      console.log("Changes saved successfully.");
       setIsEditing(false);
       setCurrentEditContent(null);
-      console.log("Changes saved.");
     } catch (error) {
       console.error("Failed to save changes:", error);
     }
- };
- 
+  }, [currentEditContent, projects]);
+  
+  
   return (
-    <Container> 
-      {/* ... Loading and error states */}
-      {!loading && !error && projects.map((project, projectIndex) => (
-  <React.Fragment key={project.id}> {/* Use React.Fragment with key for top-level list */}
-   <Project 
-      key={project.id} 
-      project={project}
-      activeTab={activeTab?.projectIndex === projectIndex ? activeTab.tabIndex : 0}
-      onTabClick={(tabIndex) => handleTabClick(projectIndex, tabIndex)}
-      isEditing={isEditing}
-      handleImageUpload={handleImageUpload}
-      currentEditContent={currentEditContent}
-      handleContentChange={handleContentChange}
-      handleEditToggle={handleEditToggle}  // Make sure this is correctly passed
-      handleSaveChanges={handleSaveChanges}
-/>
-
-    
-  </React.Fragment>
-))}
-
-      {/* Content - Only show tab contents for the currently ACTIVE project */}
-      
-      
+    <Container>
+      {/* Loading and error handling UI */}
+      {loading && <p>Loading...</p>}
+      {error && <p>Error loading projects: {error.message}</p>}
+      {!loading && !error && projects.map((project, index) => (
+        <Project
+          key={project.id}
+          project={project}
+          activeTab={activeTab.projectIndex === index ? activeTab.tabIndex : 0}
+          onTabClick={(tabIndex) => setActiveTab({ projectIndex: index, tabIndex })}
+          isEditing={isEditing}
+          
+          currentEditContent={currentEditContent}
+          handleContentChange={handleContentChange}
+          handleEditToggle={handleEditToggle}
+          handleSaveChanges={handleSaveChanges}
+        />
+      ))}
     </Container>
   );
 };
