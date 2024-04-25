@@ -246,13 +246,24 @@ export default function Indicators() {
   const [activeTab, setActiveTab] = useState('operacao');
   const [visibleTab, setVisibleTab] = useState(0);
   const [sheetData, setSheetData] = useState({});
-  const [Title, setTitle] = useState([]);
-  const [Text, setText] = useState([]);
-  const [additionalInfo, setAdditionalInfo] = useState([]);
-  const [ImageUrl, setImageUrl] = useState([]);
   const [selectedProject, setSelectedProject] = useState('PainelSolarTeste')
   const [progress, setProgress] = useState(50);  // Example progress state
   const db = getFirestore();
+  const [content, setContent] = useState({
+    Title1: '',
+    Text1: '',
+    AdditionalInfo1: '',
+    ImageUrl1: '',
+    Title2: '',
+    Text2: '',
+    AdditionalInfo2: '',
+    ImageUrl2: '',
+    Title3: '',
+    Text3: '',
+    AdditionalInfo3: '',
+    ImageUrl3: ''
+
+});
   console.log('imageUrl:', project?.tabContents?.ImageUrl);
 
   useEffect(() => {
@@ -357,6 +368,25 @@ export default function Indicators() {
   
     fetchProjects();
   }, [db]);  // Ensuring this only runs when `db` changes
+  useEffect(() => {
+    const fetchTabData = async () => {
+        if (!activeTab || projects.length === 0) return;
+        const activeProject = projects.find(p => p.id === projectid);
+        if (activeProject) {
+            const tabContent = activeProject.tabContents[activeTab];
+            const newContent = {};
+            Object.keys(content).forEach(key => {
+                if (tabContent[key]) {
+                    newContent[key] = tabContent[key].toString();
+                    console.log(`${key}:`, newContent[key]);
+                }
+            });
+            setContent(newContent);
+        }
+    };
+
+    fetchTabData();
+}, [activeTab, projects, projectid]);
   
  
 
@@ -383,41 +413,7 @@ export default function Indicators() {
     fetchSheetData();
   }, [activeTab, projects]);
   
-  useEffect(() => {
-    if (projects.length > 0 && activeTab) {
-      const activeProject = projects.find(p => p.id === projectid); // find the active project by id
-      if (activeProject && activeProject.tabContents[activeTab]) {
-        const tabContent = activeProject.tabContents[activeTab];
-
-        // Handle Title1
-        if (tabContent.Title1) {
-          const title1 = tabContent.Title1.toString();
-          setTitle(title1); // assuming setTitle is meant to hold the title for display
-          console.log("Title:", title1);
-        }
-
-        // Handle Text1
-        if (tabContent.Text1) {
-          const text1 = tabContent.Text1.toString();
-          setText(text1); // assuming setText is meant to hold the text for display
-          console.log("Text:", text1);
-        }
-
-        // Handle AdditionalInfo
-        if (tabContent.AdditionalInfo) {
-          const additionalInfo = tabContent.AdditionalInfo.toString();
-          setAdditionalInfo(additionalInfo); // assuming setAdditionalInfo is meant to hold the additional info for display
-          console.log("Additional Info:", additionalInfo);
-        }
-        if (tabContent.ImageUrl) {
-          const imageUrl = tabContent.ImageUrl.toString();
-          setImageUrl(imageUrl); // assuming setAvatarUrl is meant to hold the avatar url for display
-          console.log("Avatar Url:", imageUrl);
-      }
-    }
-    }
-  }, [activeTab, projects, projectid]);
-
+  
  
 
   function parseCSV(csvText) {
@@ -470,7 +466,7 @@ export default function Indicators() {
             {data.map((item, index) => (
               <GridItem key={index}>
                   <img src={item.icon} alt="logo" />
-                  <p>{item.text}</p>
+                  <div dangerouslySetInnerHTML={{ __html:  item.text }} />
               </GridItem>
             ))}
             </Grid>
@@ -497,13 +493,21 @@ export default function Indicators() {
           <Arrow onClick={() => scrollTabs(1)}><FaArrowRight /></Arrow>
         </Row>
         
-        <H1>{Title}</H1>
-        <P>{Text}</P>
-        <P>{additionalInfo}</P>
+        <H1>{content.Title1}</H1>
+        <P>{content.Text1}</P>
+        <P>{content.AdditionalInfo1}</P>
+        <img src={content.ImageUrl1} alt="logo" />
+        <H1>{content?.Title2}</H1>
+        <P>{content?.Text2}</P>
+        <P>{content?.AdditionalInfo2}</P>
+        <img src={content?.ImageUrl2} />
+        <H1>{content?.Title3}</H1>
+        <P>{content?.Text3}</P>
+        <P>{content?.AdditionalInfo3}</P>
+        <img src={content?.ImageUrl3} />
+
        
-        
-        {sheetData?.sheetData1 && (<Embed frameborder="0" src={sheetData.sheetData1}></Embed>)}
-     
+    
       </SecondSetup>
     </Container>
   );

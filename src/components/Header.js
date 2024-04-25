@@ -148,7 +148,7 @@ const Header = () => {
         </div>
 
         <NavManu isToggleOpen={isToggleOpen}>
-          {/* Correctly use <a> elements with href="#" and prevent default behavior */}
+          
           <li><a href="#sobre" className="nav-menu-list" onClick={(e) => handleScroll(e, 'sobre')}>SOBRE</a></li>
           <li><a href="#parceria" className="nav-menu-list" onClick={(e) => handleScroll(e, 'parceria')}>PARCERIA</a></li>
           <li><a href="#faq" className="nav-menu-list" onClick={(e) => handleScroll(e, 'faq')}>FAQ</a></li>

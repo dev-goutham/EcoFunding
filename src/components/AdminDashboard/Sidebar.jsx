@@ -92,8 +92,8 @@ function Sidebar() {
         <Links>
           <Li><Link to="/admindashboard"><span style={{ marginLeft: '10px' }}>Painel de Controle</span></Link></Li>
           <Li><Link to="/admindashboard/projetos"><span style={{ marginLeft: '10px' }}>Projetos</span></Link></Li>
-          <Li><Link to="/admindashboard/formularios"> <span style={{ marginLeft: '10px' }}>Formularios</span></Link></Li>
-          <Li><Link to="/admindashboard/usuarios"><span style={{ marginLeft: '10px' }}>Usuarios</span></Link></Li>
+          <Li><Link to="/admindashboard/formularios"> <span style={{ marginLeft: '10px' }}>Formulários</span></Link></Li>
+          <Li><Link to="/admindashboard/usuarios"><span style={{ marginLeft: '10px' }}>Úsuarios</span></Link></Li>
            
           <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
         </Links>

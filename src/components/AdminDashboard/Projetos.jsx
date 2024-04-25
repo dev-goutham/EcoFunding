@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { collection, getDocs, updateDoc, doc } from 'firebase/firestore';
-import { db } from '../../config/firebase'; // Adjust the path according to your project structure
+import { db, storage } from '../../config/firebase'; // Adjust the path according to your project structure
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css';
 
@@ -90,23 +91,7 @@ const ProjectItem = styled.div`
     }
   }
 `;
-const TabContent = ({ tab, isEditing, currentEditContent, onEditToggle, onSave, onContentChange }) => {
-    return (
-        <ProjectItem>
-            <h3>{tab.id} Tab</h3>
-            {Object.keys(tab).map((field) => (
-                <div key={field}>
-                    {isEditing && currentEditContent.contentId === tab.id && currentEditContent.field === field ? (
-                        <ReactQuill value={tab[field]} onChange={(content) => onContentChange(content, tab.id, field)} />
-                    ) : (
-                        <p onClick={() => onEditToggle(tab.projectId, tab.id, field)}>{tab[field]}</p>
-                    )}
-                </div>
-            ))}
-            <Button onClick={onSave}>Save</Button>
-        </ProjectItem>
-    );
-};
+
   
 const Project = ({
     project, isEditing, currentEditContent, handleContentChange, handleEditToggle, handleSaveChanges, handleImageUpload
@@ -120,7 +105,7 @@ const Project = ({
     const getInputType = (fieldName) => {
         if (fieldName.toLowerCase().includes('text')) {
             return 'text';
-        } else if (fieldName.toLowerCase().includes('avatar Url')) {
+        } else if (fieldName.toLowerCase().includes('url')) {
             return 'image';
         } else if (fieldName.toLowerCase().endsWith('s')) { // Simple heuristic to guess array fields
             return 'array';
@@ -128,7 +113,23 @@ const Project = ({
         return 'default'; // Use ReactQuill for other cases
     };
     
-
+    const TabContents = ({ tab }) => (
+      <div>
+          <h3>{tab.id} Tab</h3>
+          {Object.keys(tab).map((field) => (
+              <div key={field}>
+                  {isEditing && currentEditContent.contentId === tab.id && currentEditContent.field === field ? (
+                      <ReactQuill
+                          value={tab[field]}
+                          onChange={(content) => handleContentChange(content, project.id, tab.id, field)}
+                      />
+                  ) : (
+                      <p onClick={() => handleEditToggle(project.id, tab.id, field)}>{tab[field]}</p>
+                  )}
+              </div>
+          ))}
+      </div>
+  );
     return (
         <ProjectList>
     <h2 onClick={() => handleEditToggle('project', project.id, null, 'name')}>{project.name}</h2>
@@ -146,7 +147,7 @@ const Project = ({
                 ) : inputType === 'image' ? (
                     <input 
                         type="file"
-                        onChange={(e) => handleImageUpload(e, project.id, field)}
+                        onChange={(e) => handleImageUpload(e, project.id, null, field)}
                     />
                 ) : inputType === 'array' ? (
                     <ArrayEditor 
@@ -179,15 +180,28 @@ const Project = ({
         ))}
     </Nav>
     {/* Display the content of the active tab below the navigation bar */}
-    <TabContent
-        tab={project.tabContents[activeTabIndex]}
-        isEditing={isEditing}
-        currentEditContent={currentEditContent}
-        onEditToggle={handleEditToggle}
-        onSave={handleSaveChanges}
-        onContentChange={handleContentChange}
-    />
-</ProjectList>
+    {project.tabContents[activeTabIndex] && (
+                <div>
+                    <h3>{project.tabContents[activeTabIndex].id} Tab</h3>
+                    {Object.keys(project.tabContents[activeTabIndex]).map((field) => (
+                        <div key={field}>
+                            {isEditing && currentEditContent?.contentId === project.tabContents[activeTabIndex].id && currentEditContent?.field === field ? (
+                                <input
+                                    type="text"
+                                    value={project.tabContents[activeTabIndex][field]}
+                                    onChange={(e) => handleContentChange(e.target.value, project.id, project.tabContents[activeTabIndex].id, field)}
+                                />
+                            ) : (
+                                <p onClick={() => handleEditToggle(project.id, project.tabContents[activeTabIndex].id, field)}>
+                                    {project.tabContents[activeTabIndex][field]}
+                                </p>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            )}
+        </ProjectList>
+
 
     );
 };
@@ -311,7 +325,8 @@ const Projetos = () => {
 
     fetchProjects();
   }, []);
-
+  
+  
   const handleEditToggle = useCallback((type, projectId, contentId, field) => {
     setIsEditing(prev => !prev);
     setCurrentEditContent(prev => prev && prev.projectId === projectId && prev.contentId === contentId && prev.field === field ? null : { type, projectId, contentId, field });
@@ -334,6 +349,34 @@ const Projetos = () => {
       return project;
     }));
   }, []);
+  const uploadFileToStorage = async (file) => {
+    const storageRef = ref(storage, `images/${file.name}`);
+    const uploadTask = await uploadBytesResumable(storageRef, file);
+    return await getDownloadURL(uploadTask.ref);
+  };
+  const updateProjectImageURL = async (projectId, field, imageUrl) => {
+    const docRef = doc(db, `projects/${projectId}`);
+    await updateDoc(docRef, { [field]: imageUrl });
+  };
+  
+  
+  const handleImageUpload = async (event, projectId, field) => {
+    const file = event.target.files[0];
+    if (!file) return;
+  
+    try {
+      // Upload the file and retrieve the URL
+      const imageUrl = await uploadFileToStorage(file);
+  
+      // Update the field in the Firestore document
+      await updateProjectImageURL(projectId, field, imageUrl);
+  
+      // Optionally update local state to reflect changes immediately in the UI
+      handleContentChange(imageUrl, projectId, null, field);
+    } catch (error) {
+      console.error("Error uploading image or updating Firestore:", error);
+    }
+  };
   
 
   const handleSaveChanges = useCallback(async () => {
@@ -378,6 +421,7 @@ const Projetos = () => {
           activeTab={activeTab.projectIndex === index ? activeTab.tabIndex : 0}
           onTabClick={(tabIndex) => setActiveTab({ projectIndex: index, tabIndex })}
           isEditing={isEditing}
+          handleImageUpload={handleImageUpload}
           
           currentEditContent={currentEditContent}
           handleContentChange={handleContentChange}

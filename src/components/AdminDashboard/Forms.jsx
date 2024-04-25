@@ -92,7 +92,7 @@ const Forms = () => {
       </Container>
       </div>
       <div style={{ width: '40%'}}>
-      <h2 style={{ textAlign: 'center', margin: '2rem 12rem' }}>FORMULARIO INVESTIDORES</h2>
+      <h2 style={{ textAlign: 'center', margin: '2rem 12rem' }}>FORMULÁRIO INVESTIDORES</h2>
       <Container>
         {forms.filter(form => form.role === "Investidor").map((form) => (
           <FormDetails key={form.id} form={form} />
