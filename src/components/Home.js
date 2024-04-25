@@ -284,24 +284,22 @@ const Button1 = styled.button`
   }
 `;
 const StyledCarouselProvider = styled(CarouselProvider)`
-  height: 95vh;
+  height: 95vh; // Default height for large screens
 
+  @media (max-width: 1200px) {
+    height: 80vh; // Height for screens smaller than 1200px
+  }
+  @media (max-width: 992px) {
+    height: 75vh; // Height for medium screens
+  }
   @media (max-width: 768px) {
-    height: 80vh;
+    height: 70vh; // Height for small screens
   }
-  @media (max-width: 668px) {
-    height: 85vh;
-  }
-  @media (max-width: 568px) {
-    height: 90vh;
-  }
-  @media (max-width: 468px) {
-    height: 90vh;
-  }
-  @media (max-width: 368px) {
-    height: 100vh;
+  @media (max-width: 576px) {
+    height: 65vh; // Height for extra small screens
   }
 `;
+
 
 const Home = ({ imgurl, altText, title, paragraph, button, transform }) => {
   const { width } = useWindowSize(); // Use the custom hook
@@ -426,7 +424,7 @@ const HomeCarousel = () => {
       naturalSlideWidth={100}
       naturalSlideHeight={slideHeight}
       totalSlides={slidesData.length}
-      style={{ marginTop: '-8em' }}
+      
     >
         <Wrapper2 onMouseMove={handleMouseMove}>
         <ParallaxFolha ref={folhaRef} src={FolhaEsquerda} alt="folha"/>

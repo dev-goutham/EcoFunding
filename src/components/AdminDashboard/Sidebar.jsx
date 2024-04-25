@@ -110,7 +110,7 @@ const AvatarInput = styled.div`
 `;
 
 const Container = styled.div`
-  width: 20%;
+  width: 15%;
   height: 100% !important;
   background-color: #242a32;
   display: flex;
