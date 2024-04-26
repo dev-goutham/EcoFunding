@@ -290,14 +290,9 @@ const StyledCarouselProvider = styled(CarouselProvider)`
     height: 80vh; // Height for screens smaller than 1200px
   }
   @media (max-width: 992px) {
-    height: 75vh; // Height for medium screens
+    height: 40vh; // Height for medium screens
   }
-  @media (max-width: 768px) {
-    height: 70vh; // Height for small screens
-  }
-  @media (max-width: 576px) {
-    height: 65vh; // Height for extra small screens
-  }
+ 
 `;
 
 

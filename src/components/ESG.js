@@ -205,7 +205,7 @@ const TextRectangle2 = styled.div`
   border-radius: 12px;
   white-space: pre-wrap;
   color: #c8c8c8c8;
-  @media (max-width: ${breakpoints.tablet}) {
+  @media (max-width: 768px) {
     min-width: 400px;
     margin-right: 0px;
   }

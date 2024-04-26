@@ -171,7 +171,7 @@ const scrollToSection = (sectionId) => {
   }
 };
 
-function Rodape() {
+function Rodape({ id }) {
   const [email, setEmail] = useState('');
 
   const handleEmailChange = (e) => {
@@ -200,14 +200,14 @@ function Rodape() {
   };
 
   return (
-    <StyledHeader>
+    <StyledHeader id={id}>
       <MainContent>
         <Sidebar>
           <Logo src={Eco} alt="Logo" />
           <SocialMediaIcons>
             <a href="mailto:contato@ecofunding.com.br"><IconImg src={Image1} alt="Icon 1" /></a>
             <a href="https://www.instagram.com/ecofundinginvest/"><IconImg src={Image2} alt="Icon 2" href=""/></a>
-            <a href="https://www.linkedin.com/company/ecofunding/about/"><IconImg src={Image3} alt="Icon 3" href=""/></a>
+            <a href="https://www.linkedin.com/company/ecofundinginvest/"><IconImg src={Image3} alt="Icon 3" href=""/></a>
             
             </SocialMediaIcons>
         </Sidebar>
